@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: test
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          #id:
+          #new_generator_mappings: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  datasource:
+    url: jdbc:tc:postgresql:///databasename
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: postgres
+    password:
