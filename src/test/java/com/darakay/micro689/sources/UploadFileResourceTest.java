@@ -1,5 +1,6 @@
 package com.darakay.micro689.sources;
 
+import com.darakay.micro689.domain.FullFilledBLRecord;
 import com.darakay.micro689.repo.FullFilledBLRepository;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
@@ -14,11 +15,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Locale;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -45,9 +46,9 @@ public class UploadFileResourceTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        assertThat(fullFilledBLRepository.findBySurname("Петров")).hasSize(10);
+        List<FullFilledBLRecord> result = fullFilledBLRepository.findBySurname("Петров");
+        assertThat(result).hasSize(10);
     }
-
 
     private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount){
         StringBuilder sb = new StringBuilder();
@@ -55,7 +56,7 @@ public class UploadFileResourceTest {
             sb.append("Петров,");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5},"));
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7},"));
-            sb.append(fakeValuesService.regexify("[0-9]{2}-[0-9]{2}-[0-9]{4},"));
+            sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9],"));
             sb.append(fakeValuesService.regexify("[0-9]{4},"));
             sb.append(fakeValuesService.regexify("[0-9]{6},"));
             sb.append(fakeValuesService.regexify("[0-9]{6},"));

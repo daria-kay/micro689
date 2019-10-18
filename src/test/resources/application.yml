@@ -11,6 +11,7 @@ spring:
           #new_generator_mappings: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+    contexts: test
   datasource:
     url: jdbc:tc:postgresql:///databasename
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
