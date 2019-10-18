@@ -53,14 +53,14 @@ public class UploadFileResourceTest {
     private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount){
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < recordCount; i++) {
-            sb.append("Петров,");
-            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5},"));
-            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7},"));
-            sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9],"));
-            sb.append(fakeValuesService.regexify("[0-9]{4},"));
-            sb.append(fakeValuesService.regexify("[0-9]{6},"));
-            sb.append(fakeValuesService.regexify("[0-9]{6},"));
-            sb.append(fakeValuesService.regexify("+7[0-9]{10},"));
+            sb.append("Петров;");
+            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
+            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));
+            sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9];"));
+            sb.append(fakeValuesService.regexify("[0-9]{4};"));
+            sb.append(fakeValuesService.regexify("[0-9]{6};"));
+            sb.append(fakeValuesService.regexify("[0-9]{6};"));
+            sb.append(fakeValuesService.regexify("+7[0-9]{10};"));
             sb.append(fakeValuesService.regexify("[A-Za-z]{6}\\@[a-z]{3}\\.com"));
             sb.append("\n");
         }

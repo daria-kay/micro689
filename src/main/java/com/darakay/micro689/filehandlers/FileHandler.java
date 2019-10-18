@@ -17,7 +17,8 @@ public abstract class FileHandler {
     public void parseAndSave(MultipartFile multipartFile) {
         try(Reader reader = new InputStreamReader(new ByteArrayInputStream(multipartFile.getBytes()));) {
             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader(getCSVColumnNames()).parse(reader);
+            Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';')
+                    .withHeader(getCSVColumnNames()).parse(reader);
             storeRecords(records);
             parser.close();
         } catch (IOException e) {
