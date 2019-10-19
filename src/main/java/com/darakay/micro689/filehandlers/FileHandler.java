@@ -13,12 +13,10 @@ import java.io.Reader;
 
 public abstract class FileHandler {
 
-
     public void parseAndSave(MultipartFile multipartFile) {
         try(Reader reader = new InputStreamReader(new ByteArrayInputStream(multipartFile.getBytes()));) {
             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';')
-                    .withHeader(getCSVColumnNames()).parse(reader);
+            Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';').parse(reader);
             storeRecords(records);
             parser.close();
         } catch (IOException e) {
@@ -27,6 +25,4 @@ public abstract class FileHandler {
     }
 
     abstract void storeRecords(Iterable<CSVRecord> records);
-
-    abstract String[] getCSVColumnNames();
 }
