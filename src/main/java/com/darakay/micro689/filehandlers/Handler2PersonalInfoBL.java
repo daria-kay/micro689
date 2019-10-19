@@ -1,7 +1,7 @@
 package com.darakay.micro689.filehandlers;
 
-import com.darakay.micro689.domain.FullFilledBLRecord;
-import com.darakay.micro689.repo.FullFilledBLRepository;
+import com.darakay.micro689.domain.PersonalInfoBLRecord;
+import com.darakay.micro689.repo.PersonalInfoBLRepository;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,20 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service(value = "full-filled")
-public class Handler2FullFilledType extends FileHandler {
+@Service(value = "personal-info")
+public class Handler2PersonalInfoBL extends FileHandler {
 
     @Autowired
-    private FullFilledBLRepository fullFilledBLRepository;
+    private PersonalInfoBLRepository personalInfoBLRepository;
 
     @Override
     void storeRecords(Iterable<CSVRecord> records) {
-        fullFilledBLRepository.saveAll(mapCSVRecordsToDBEntity(records));
+        personalInfoBLRepository.saveAll(mapCSVRecords(records));
     }
 
-    private List<FullFilledBLRecord> mapCSVRecordsToDBEntity(Iterable<CSVRecord> records) {
+    private List<PersonalInfoBLRecord> mapCSVRecords(Iterable<CSVRecord> records) {
         return StreamSupport.stream(records.spliterator(), true)
-                .map(record -> new FullFilledBLRecord(record, 0))
+                .map(record -> new PersonalInfoBLRecord(record, 0))
                 .collect(Collectors.toList());
     }
 }
