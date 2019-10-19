@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class BLTypeNotFoundException extends RuntimeException {
-    public BLTypeNotFoundException(String unexistedBLType) {
-        super("Black list type '" + unexistedBLType + "' not found!");
+    public BLTypeNotFoundException(String nonexistentBLType) {
+        super("Black list type '" + nonexistentBLType + "' not found!");
     }
 }

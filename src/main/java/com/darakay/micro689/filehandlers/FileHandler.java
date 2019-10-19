@@ -19,7 +19,7 @@ public abstract class FileHandler {
             Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';').parse(reader);
             storeRecords(records);
             parser.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CannotReadFileException();
         }
     }

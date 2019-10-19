@@ -16,9 +16,9 @@ public class FileUploadingService {
     private Map<String, FileHandler> fileHandlerMap;
 
     public void handleFile(String blType, MultipartFile multipartFile) {
-        FileHandler fileHandler = Optional.of(fileHandlerMap.get(blType))
-                .orElseThrow(() -> new BLTypeNotFoundException(blType));
-        fileHandler.parseAndSave(multipartFile);
+       Optional.ofNullable(fileHandlerMap.get(blType))
+                .orElseThrow(() -> new BLTypeNotFoundException(blType))
+                .parseAndSave(multipartFile);
     }
 
 }

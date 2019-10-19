@@ -17,7 +17,7 @@ public class UploadFileResource {
 
     @PostMapping("/{black-list-type}/upload-task")
     public ResponseEntity uploadCsvFile(@PathVariable("black-list-type") String blType,
-                                        @RequestParam("file.csv") MultipartFile multipartFile){
+                                        @RequestParam("csv") MultipartFile multipartFile){
 
         fileUploadingService.handleFile(blType, multipartFile);
         return ResponseEntity.created(URI.create("/api/v1/black-list/"+blType)).build();

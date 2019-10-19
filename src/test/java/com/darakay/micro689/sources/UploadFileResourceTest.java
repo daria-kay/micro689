@@ -17,9 +17,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -120,13 +125,79 @@ public class UploadFileResourceTest {
         assertThat(result).isNotNull();
     }
 
+    @Test
+    public void shouldReturn_404Response_forNonexistentBLType() throws Exception {
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "some-black-list")
+                .file(new MockMultipartFile("csv", "filedata".getBytes()))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void shouldReturn_400Response_ForInvalidFileFormat_WrongNumberOfColumns() throws Exception {
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "phone")
+                        .file(new MockMultipartFile("csv", "+7987671222;+78653282".getBytes()))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                        .value("Неверное количество столбцов с csv файле. Ожидалось 1, получено 2"));
+
+    }
+
+    @Test
+    public void shouldReturn_400Response_ForInvalidFileFormat_WrongDataFormat() throws Exception {
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "personal-info")
+                        .file(new MockMultipartFile("csv", "Иванов;Иван;Иванович;1987/07/07".getBytes()))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                        .value("Неверный формат даты рождения." +
+                                " Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
+
+    }
+
+    @Test
+    public void shouldReturn_400Response_ForMissingRequestParam() throws Exception {
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "personal-info")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void shouldReturn_400Response_ForInvalidContentType() throws Exception {
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "personal-info")
+                        .file(new MockMultipartFile("csv", "content".getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void shouldReturn_400Response_ForInvalidCSVFile() throws Exception {
+        byte[] content = new byte[10_000_000];
+        new Random().nextBytes(content);
+        mockMvc.perform(
+                multipart(UPLOAD_URL, "personal-info")
+                        .file(new MockMultipartFile("csv", content))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().is4xxClientError());
+
+    }
+
     private MockMultipartFile getFakeCsvContentForEmailBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("a[a-z]{5}\\@yandex.ru"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 
@@ -136,7 +207,7 @@ public class UploadFileResourceTest {
             sb.append(fakeValuesService.regexify("+7123456789"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 
@@ -146,7 +217,7 @@ public class UploadFileResourceTest {
             sb.append(fakeValuesService.regexify("123456"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 
@@ -157,7 +228,7 @@ public class UploadFileResourceTest {
             sb.append(fakeValuesService.regexify("123456"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 
@@ -175,7 +246,7 @@ public class UploadFileResourceTest {
             sb.append(fakeValuesService.regexify("[A-Za-z]{6}\\@[a-z]{3}\\.com"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 
@@ -188,7 +259,7 @@ public class UploadFileResourceTest {
             sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9]"));
             sb.append("\n");
         }
-        return new MockMultipartFile("file.csv", null,
+        return new MockMultipartFile("csv", null,
                 "text/csv", sb.toString().getBytes());
     }
 }
