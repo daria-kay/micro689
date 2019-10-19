@@ -1,25 +1,27 @@
-package com.darakay.micro689.filehandlers;
+package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.domain.EmailBLRecord;
 import com.darakay.micro689.repo.EmailBLRepository;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service(value = "email")
-public class HandlerToEmailBL extends FileHandler {
+public class EmailBLService extends BaseBLService {
 
-    @Autowired
-    private EmailBLRepository emailBLRepository;
+    private final EmailBLRepository emailBLRepository;
+
+    public EmailBLService(EmailBLRepository emailBLRepository) {
+        this.emailBLRepository = emailBLRepository;
+    }
 
     @Override
-    void storeRecords(Iterable<CSVRecord> records) {
+    void storeRecords(Iterable<CSVRecord> records, int creatorId) {
         emailBLRepository.saveAll(
                 StreamSupport.stream(records.spliterator(), true)
-                .map(record -> new EmailBLRecord(record, 0))
+                .map(record -> new EmailBLRecord(record, creatorId))
                 .collect(Collectors.toList())
         );
     }

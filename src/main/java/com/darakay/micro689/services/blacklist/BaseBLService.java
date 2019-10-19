@@ -1,4 +1,4 @@
-package com.darakay.micro689.filehandlers;
+package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.exception.CannotReadFileException;
 import org.apache.commons.csv.CSVFormat;
@@ -11,18 +11,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public abstract class FileHandler {
+public abstract class BaseBLService {
 
-    public void parseAndSave(MultipartFile multipartFile) {
+    public void parseAndSaveCSVFile(MultipartFile multipartFile, int creatorId) {
         try(Reader reader = new InputStreamReader(new ByteArrayInputStream(multipartFile.getBytes()));) {
             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
             Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';').parse(reader);
-            storeRecords(records);
+            storeRecords(records, creatorId);
             parser.close();
-        } catch (Exception e) {
+        } catch (IllegalStateException | IOException e) {
             throw new CannotReadFileException();
         }
     }
 
-    abstract void storeRecords(Iterable<CSVRecord> records);
+    abstract void storeRecords(Iterable<CSVRecord> records, int creatorId);
 }

@@ -1,4 +1,4 @@
-package com.darakay.micro689.filehandlers;
+package com.darakay.micro689.services.blacklist;
 
 import org.apache.commons.csv.CSVRecord;
 import org.junit.Before;
@@ -14,21 +14,21 @@ import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class FileHandlerTest {
+public class BaseBLServiceTest {
 
-    private FileHandler fileHandler;
+    private BaseBLService baseBLService;
 
     @Before
     public void setUp(){
-        fileHandler = mock(FileHandler.class);
-        doCallRealMethod().when(fileHandler).parseAndSave(any(MultipartFile.class));
+        baseBLService = mock(BaseBLService.class);
+        doCallRealMethod().when(baseBLService).parseAndSaveCSVFile(any(MultipartFile.class));
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
             List<String> fake = StreamSupport
                     .stream(((Iterable<CSVRecord>)args[0]).spliterator(), false).map(r -> r.toString())
                     .collect(Collectors.toList());
             return new Object();
-        }).when(fileHandler).storeRecords(any());
+        }).when(baseBLService).storeRecords(any());
     }
 
     @Test
@@ -36,9 +36,9 @@ public class FileHandlerTest {
         MultipartFile testFile = new MockMultipartFile("csv", "file-name.csv", "text/csv",
                 "Иванов;Иван;Иванович;1987-07-07;1234;123456;+7895634782;asd@asd.ru\n".getBytes());
 
-        fileHandler.parseAndSave(testFile);
+        baseBLService.parseAndSaveCSVFile(testFile);
 
-        verify(fileHandler, times(1)).storeRecords(any());
+        verify(baseBLService, times(1)).storeRecords(any());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class FileHandlerTest {
                 "ncdjnjd\"c\"d,k\"j6+789;5634782,asd@asd.ru\n".getBytes());
 
         try {
-            fileHandler.parseAndSave(testFile);
+            baseBLService.parseAndSaveCSVFile(testFile);
         } catch (Exception e){
             fail("Exception was thrown!");
         }
