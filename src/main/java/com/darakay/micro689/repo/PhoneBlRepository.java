@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PhoneBlRepository extends CrudRepository<PhoneBLRecord, Integer> {
+
+    boolean existsByPhone(String phone);
 }

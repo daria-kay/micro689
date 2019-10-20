@@ -1,6 +1,5 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.domain.*;
 import com.darakay.micro689.repo.*;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
@@ -15,7 +14,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -64,8 +62,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        List<FullFilledBLRecord> result = fullFilledBLRepository.findBySurname("Петров");
-        assertThat(result).hasSize(10);
+        assertThat(fullFilledBLRepository.existsBySurname("Петров")).isTrue();
     }
 
     @Test
@@ -75,8 +72,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        List<PersonalInfoBLRecord> result = personalInfoBLRepository.findBySurname("Петров");
-        assertThat(result).hasSize(5);
+        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isTrue();
     }
 
     @Test
@@ -86,8 +82,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        List<PassportInfoBLRecord> result = passportInfoBLRepository.findByPassportNumber("123456");
-        assertThat(result).hasSize(5);
+        assertThat(passportInfoBLRepository.existsByPassportNumber("123456")).isTrue();
     }
 
     @Test
@@ -97,8 +92,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        List<InnBLRecord> result = innBLRepository.findByInn("123456");
-        assertThat(result).hasSize(5);
+        assertThat(innBLRepository.findByInn("123456")).hasSize(5);
     }
 
     @Test
@@ -108,8 +102,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        PhoneBLRecord result = phoneBLRepository.findById(5).get();
-        assertThat(result).isNotNull();
+        assertThat(phoneBLRepository.existsById(5)).isTrue();
     }
 
     @Test
@@ -118,8 +111,7 @@ public class UploadCSVFileTest {
                 .file(getFakeCsvContentForEmailBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
-        EmailBLRecord result = emailBLRepository.findById(5).get();
-        assertThat(result).isNotNull();
+        assertThat(emailBLRepository.existsById(5)).isTrue();
     }
 
     @Test
@@ -142,6 +134,9 @@ public class UploadCSVFileTest {
                 .andExpect(jsonPath("$.message")
                         .value("Неверное количество столбцов с csv файле. Ожидалось 1, получено 2"));
 
+        assertThat(phoneBLRepository.existsByPhone("+7987671222")).isFalse();
+        assertThat(phoneBLRepository.existsByPhone("+78653282")).isFalse();
+
     }
 
     @Test
@@ -154,6 +149,8 @@ public class UploadCSVFileTest {
                 .andExpect(jsonPath("$.message")
                         .value("Неверный формат даты рождения." +
                                 " Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
+
+        assertThat(personalInfoBLRepository.existsBySurname("Иванов")).isFalse();
 
     }
 

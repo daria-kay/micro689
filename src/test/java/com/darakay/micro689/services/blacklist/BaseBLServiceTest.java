@@ -21,14 +21,14 @@ public class BaseBLServiceTest {
     @Before
     public void setUp(){
         baseBLService = mock(BaseBLService.class);
-        doCallRealMethod().when(baseBLService).parseAndSaveCSVFile(any(MultipartFile.class));
+        doCallRealMethod().when(baseBLService).parseAndSaveCSVFile(any(MultipartFile.class), 0);
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
             List<String> fake = StreamSupport
                     .stream(((Iterable<CSVRecord>)args[0]).spliterator(), false).map(r -> r.toString())
                     .collect(Collectors.toList());
             return new Object();
-        }).when(baseBLService).storeRecords(any());
+        }).when(baseBLService).storeRecords(any(), 0);
     }
 
     @Test
@@ -36,9 +36,9 @@ public class BaseBLServiceTest {
         MultipartFile testFile = new MockMultipartFile("csv", "file-name.csv", "text/csv",
                 "Иванов;Иван;Иванович;1987-07-07;1234;123456;+7895634782;asd@asd.ru\n".getBytes());
 
-        baseBLService.parseAndSaveCSVFile(testFile);
+        baseBLService.parseAndSaveCSVFile(testFile, 0);
 
-        verify(baseBLService, times(1)).storeRecords(any());
+        verify(baseBLService, times(1)).storeRecords(any(), 0);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BaseBLServiceTest {
                 "ncdjnjd\"c\"d,k\"j6+789;5634782,asd@asd.ru\n".getBytes());
 
         try {
-            baseBLService.parseAndSaveCSVFile(testFile);
+            baseBLService.parseAndSaveCSVFile(testFile, 0);
         } catch (Exception e){
             fail("Exception was thrown!");
         }
