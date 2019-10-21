@@ -118,8 +118,8 @@ public class UploadCSVFileTest {
     public void shouldReturn_404Response_forNonexistentBLType() throws Exception {
         mockMvc.perform(
                 multipart(UPLOAD_URL, "some-black-list")
-                .file(new MockMultipartFile("csv", "filedata".getBytes()))
-                .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .file(new MockMultipartFile("csv", "filedata".getBytes()))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isNotFound());
 
     }
@@ -187,7 +187,7 @@ public class UploadCSVFileTest {
 
     private MockMultipartFile getFakeCsvContentForEmailBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("a[a-z]{5}\\@yandex.ru"));
             sb.append("\n");
         }
@@ -197,7 +197,7 @@ public class UploadCSVFileTest {
 
     private MockMultipartFile getFakeCsvContentForPhoneBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("+7123456789"));
             sb.append("\n");
         }
@@ -207,7 +207,7 @@ public class UploadCSVFileTest {
 
     private MockMultipartFile getFakeCsvContentForInnBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("123456"));
             sb.append("\n");
         }
@@ -217,7 +217,7 @@ public class UploadCSVFileTest {
 
     private MockMultipartFile getFakeCsvContentForPassportInfoBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("[0-9]{4};"));
             sb.append(fakeValuesService.regexify("123456"));
             sb.append("\n");
@@ -226,9 +226,9 @@ public class UploadCSVFileTest {
                 "text/csv", sb.toString().getBytes());
     }
 
-    private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount){
+    private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append("Петров;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));
@@ -244,9 +244,9 @@ public class UploadCSVFileTest {
                 "text/csv", sb.toString().getBytes());
     }
 
-    private MockMultipartFile getFakeCsvContentForPersonalInfoBL(int recordCount){
+    private MockMultipartFile getFakeCsvContentForPersonalInfoBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             sb.append("Петров;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));

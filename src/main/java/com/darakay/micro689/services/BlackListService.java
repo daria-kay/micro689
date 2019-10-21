@@ -19,10 +19,10 @@ public class BlackListService {
 
     public void handleFile(String blType, MultipartFile multipartFile, int creatorId) {
         getAppropriateBlackListService(blType)
-                .parseAndSaveCSVFile(multipartFile, creatorId);
+                .storeCSVFile(multipartFile, creatorId);
     }
 
-    private BaseBLService getAppropriateBlackListService(String serviceType){
+    private BaseBLService getAppropriateBlackListService(String serviceType) {
         return Optional.ofNullable(blackListServiceMap.get(serviceType))
                 .orElseThrow(() -> new BLTypeNotFoundException(serviceType));
     }

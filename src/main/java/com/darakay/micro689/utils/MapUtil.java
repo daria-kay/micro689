@@ -1,16 +1,15 @@
-package com.darakay.micro689.domain;
-
+package com.darakay.micro689.utils;
 
 import com.darakay.micro689.exception.InvalidFileFormatException;
 
 import java.sql.Date;
 
-abstract class BlackListRecord {
+public class MapUtil {
 
-    protected Date convertToSqlDate(String date){
-        try{
+    public static Date convertToSqlDate(String date) {
+        try {
             return Date.valueOf(date);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw InvalidFileFormatException.wrongDateFormat();
         }
     }

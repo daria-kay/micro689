@@ -1,12 +1,12 @@
 spring:
   jpa:
     properties:
-       hibernate:
-         jdbc:
-           lob:
-             non_contextual_creation: true
-         #id:
-           #new_generator_mappings: false
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          #id:
+          #new_generator_mappings: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   datasource:

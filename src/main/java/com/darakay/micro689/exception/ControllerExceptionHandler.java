@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(InvalidFileFormatException.class)
-    public ResponseEntity<ErrorMessage> handleInvalidFileFormatException(InvalidFileFormatException ex){
+    public ResponseEntity<ErrorMessage> handleInvalidFileFormatException(InvalidFileFormatException ex) {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Micro689Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Micro689Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Micro689Application.class, args);
+    }
 
 }

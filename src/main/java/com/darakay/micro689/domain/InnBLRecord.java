@@ -1,14 +1,16 @@
 package com.darakay.micro689.domain;
 
-import com.darakay.micro689.exception.InvalidFileFormatException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.apache.commons.csv.CSVRecord;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "inn_bl")
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class InnBLRecord {
     private final static int CSV_COLUMN_COUNT = 1;
 
@@ -18,11 +20,4 @@ public class InnBLRecord {
     private Integer creatorId;
     @Column(name = "inn_num")
     private String inn;
-
-    public InnBLRecord(CSVRecord csvRecord, int creatorId){
-        if(csvRecord.size() != CSV_COLUMN_COUNT)
-            throw InvalidFileFormatException.wrongFieldCount(CSV_COLUMN_COUNT, csvRecord.size());
-        this.creatorId = creatorId;
-        this.inn = csvRecord.get(0);
-    }
 }
