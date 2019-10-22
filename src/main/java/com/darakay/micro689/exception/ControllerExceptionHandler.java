@@ -4,11 +4,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
+
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(InvalidFileFormatException.class)
-    public ResponseEntity<ErrorMessage> handleInvalidFileFormatException(InvalidFileFormatException ex) {
+    @ExceptionHandler(InvalidRecordFormatException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidFileFormatException(InvalidRecordFormatException ex) {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorMessage> handleConstraintViolationException(ConstraintViolationException ex){
+        String message = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessageTemplate)
+                .collect(Collectors.joining("\n"));
+        return ResponseEntity.badRequest().body(new ErrorMessage(message));
     }
 }

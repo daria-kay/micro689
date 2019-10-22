@@ -1,6 +1,6 @@
 package com.darakay.micro689.utils;
 
-import com.darakay.micro689.exception.InvalidFileFormatException;
+import com.darakay.micro689.exception.InvalidRecordFormatException;
 
 import java.sql.Date;
 
@@ -10,7 +10,7 @@ public class MapUtil {
         try {
             return Date.valueOf(date);
         } catch (IllegalArgumentException e) {
-            throw InvalidFileFormatException.wrongDateFormat();
+            throw InvalidRecordFormatException.wrongDateFormat();
         }
     }
 }

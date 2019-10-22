@@ -125,18 +125,14 @@ public class UploadCSVFileTest {
     }
 
     @Test
-    public void shouldReturn_400Response_ForInvalidFileFormat_WrongNumberOfColumns() throws Exception {
+    public void shouldReturn_400Response_ForInvalidFileFormat_MissingRequiredColumn() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL, "phone")
-                        .file(new MockMultipartFile("csv", "+7987671222;+78653282".getBytes()))
+                multipart(UPLOAD_URL, "passport-info")
+                        .file(new MockMultipartFile("csv", "1234".getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
-                        .value("Неверное количество столбцов с csv файле. Ожидалось 1, получено 2"));
-
-        assertThat(phoneBLRepository.existsByPhone("+7987671222")).isFalse();
-        assertThat(phoneBLRepository.existsByPhone("+78653282")).isFalse();
-
+                        .value("Не заполнено обязательное поле 'passportNumber'"));
     }
 
     @Test
