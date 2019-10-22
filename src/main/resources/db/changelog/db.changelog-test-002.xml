@@ -4,8 +4,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-
-    <include file="classpath:db/changelog/db.changelog-001.xml"/>
-    <include file="classpath:db/changelog/db.changelog-test-001.xml"/>
-    <include file="classpath:db/changelog/db.changelog-test-002.xml"/>
+    <changeSet author="micro689" id="changelog-test-insert1" context="test">
+        <insert tableName="passport_info_bl">
+            <column name="id" value="1234"/>
+            <column name="creator_id" value="0"/>
+            <column name="pass_ser" value="6754"/>
+            <column name="pass_num" value="985634"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InnBLRecord {
+public class InnBLRecord implements BlackListRecord {
     private final static int CSV_COLUMN_COUNT = 1;
 
     @Id

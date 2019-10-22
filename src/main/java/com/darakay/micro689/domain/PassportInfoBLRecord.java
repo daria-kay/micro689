@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PassportInfoBLRecord {
+public class PassportInfoBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

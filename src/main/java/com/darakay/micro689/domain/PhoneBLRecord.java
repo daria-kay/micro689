@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PhoneBLRecord {
+public class PhoneBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -32,4 +32,12 @@ public class BlackListResource {
         int id = blackListService.addEntry(blType, request, 0);
         return ResponseEntity.created(URI.create("/api/v1/black-list/"+blType+"/"+id)).build();
     }
+
+    @PutMapping("/{black-list-type}/{record-id}")
+    public ResponseEntity updateRecord(@PathVariable("black-list-type") String blType,
+                                       @PathVariable("record-id") int recordId,
+                                       @RequestBody Map<String, String> values){
+        blackListService.updateRecord(blType, recordId, values);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,10 +1,13 @@
 package com.darakay.micro689.services.blacklist;
 
+import com.darakay.micro689.domain.BlackListRecord;
 import com.darakay.micro689.exception.CannotReadFileException;
 import com.darakay.micro689.exception.InternalServerException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
+import com.darakay.micro689.exception.RecordNotFoundException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -14,46 +17,89 @@ import java.io.Reader;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public abstract class BaseBlackListService<BlRecordType> {
+public abstract class BaseBlackListService<BlRecordType extends BlackListRecord,
+        Repo extends CrudRepository<BlRecordType, Integer>> {
+
+    private Repo repository;
+    private Function<Integer, BlRecordType> createRecordWith;
+
     private final static CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withDelimiter(';');
 
-    public abstract void storeRecords(int creatorId, MultipartFile file);
+    protected BaseBlackListService(Repo repository, Function<Integer, BlRecordType> createRecordWith) {
+        this.repository = repository;
+        this.createRecordWith = createRecordWith;
+    }
 
-    public abstract int storeRecord(int creatorId, Map<String, String> values);
+    public void storeRecords(int creatorId, MultipartFile file){
+        repository.saveAll(parseSCVFile(file, createRecordWith, creatorId));
+    }
+
+    public int storeRecord(int creatorId, Map<String, String> values){
+        BlRecordType record = mapToBlackListRecordType(values, createRecordWith.apply(creatorId));
+        return repository.save(record).getId();
+    }
+
+    public void updateRecord(int recordId, Map<String, String> values){
+        BlRecordType record = repository.findById(recordId)
+                        .orElseThrow(RecordNotFoundException::new);
+        BlRecordType updated = updateRecordFields(values, record);
+        repository.save(updated);
+    }
 
     abstract String[] getFieldsNames();
 
-    protected Iterable<BlRecordType> parseSCVFile(MultipartFile multipartFile, Supplier<BlRecordType> newEmptyRecord) {
+    private Iterable<BlRecordType> parseSCVFile(MultipartFile multipartFile,
+                                                  Function<Integer, BlRecordType> newEmptyRecord,
+                                                  int creatorId) {
         try (Reader reader = new InputStreamReader(new ByteArrayInputStream(multipartFile.getBytes()))) {
             return StreamSupport.stream(CSV_FORMAT.withHeader(getFieldsNames()).parse(reader).spliterator(), true)
-                    .map(record -> mapToBlackListRecordType(record, newEmptyRecord.get()))
+                    .map(record -> mapToBlackListRecordType(record, newEmptyRecord.apply(creatorId)))
                     .collect(Collectors.toList());
         } catch (IllegalStateException | IOException e) {
             throw new CannotReadFileException();
         }
     }
 
-    protected BlRecordType mapToBlackListRecordType(Map<String, String> request, BlRecordType emptyRecord){
+    private BlRecordType mapToBlackListRecordType(Map<String, String> request, BlRecordType emptyRecord){
         Set<String> setOfNames = Stream.of(getFieldsNames()).collect(Collectors.toSet());
         Stream.of(emptyRecord.getClass().getDeclaredFields())
                 .filter(field -> setOfNames.contains(field.getName()))
-                .forEach(field -> setValue(request.get(field.getName()), field, emptyRecord));
+                .forEach(field -> checkAndSetValue(request, field, emptyRecord));
         return emptyRecord;
     }
 
-    protected BlRecordType mapToBlackListRecordType(CSVRecord record, BlRecordType emptyRecord){
+    private BlRecordType mapToBlackListRecordType(CSVRecord record, BlRecordType emptyRecord){
         return mapToBlackListRecordType(record.toMap(), emptyRecord);
     }
 
+    private BlRecordType updateRecordFields(Map<String, String> values, BlRecordType record){
+        if(values.isEmpty())
+            throw InvalidRecordFormatException.emptyValuesMap();
+        Set<String> names = Stream.of(getFieldsNames()).collect(Collectors.toSet());
+        values.keySet().forEach(key -> {
+            if(!names.contains(key))
+                throw InvalidRecordFormatException.uknownField(key);
+        });
+        Stream.of(record.getClass().getDeclaredFields())
+                .filter(field -> values.containsKey(field.getName()))
+                .forEach(field -> setValue(values.get(field.getName()), field, record));
+        return record;
+    }
+
+    private void checkAndSetValue(Map<String, String> values, Field field, BlRecordType blRecordType){
+        String value = Optional.ofNullable(values.get(field.getName()))
+                .orElseThrow(() -> InvalidRecordFormatException.missingRequiredField(field.getName()));
+        setValue(value, field, blRecordType);
+    }
+
     private void setValue(String value, Field field, BlRecordType record){
-        if(value == null)
-            throw InvalidRecordFormatException.missingRequiredField(field.getName());
         field.setAccessible(true);
         try {
             if(field.getType().equals(Date.class))
@@ -72,8 +118,4 @@ public abstract class BaseBlackListService<BlRecordType> {
             throw InvalidRecordFormatException.wrongDateFormat();
         }
     }
-
-
-
-
 }

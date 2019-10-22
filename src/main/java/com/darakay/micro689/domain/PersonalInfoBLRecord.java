@@ -14,7 +14,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PersonalInfoBLRecord {
+public class PersonalInfoBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

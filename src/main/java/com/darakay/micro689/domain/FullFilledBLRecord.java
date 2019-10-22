@@ -14,12 +14,12 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Valid
-public class FullFilledBLRecord {
+public class FullFilledBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    private int id;
+    private Integer id;
 
     @Setter
     private Integer creatorId;

@@ -3,6 +3,7 @@ package com.darakay.micro689.exception;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -22,5 +23,10 @@ public class ControllerExceptionHandler {
                 .map(ConstraintViolation::getMessageTemplate)
                 .collect(Collectors.joining("\n"));
         return ResponseEntity.badRequest().body(new ErrorMessage(message));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity handleMethodArgumentTypeMismatchException(){
+        return ResponseEntity.notFound().build();
     }
 }

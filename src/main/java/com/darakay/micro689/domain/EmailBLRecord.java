@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailBLRecord {
+public class EmailBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

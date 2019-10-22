@@ -30,6 +30,10 @@ public class BlackListService {
     public int addEntry(String blType, Map<String, String> request, int creatorId) {
         return getAppropriateBlackListService(blType).storeRecord(creatorId, request);
     }
+
+    public void updateRecord(String blType, int recordId, Map<String, String> values) {
+        getAppropriateBlackListService(blType).updateRecord(recordId, values);
+    }
 }
 
 
