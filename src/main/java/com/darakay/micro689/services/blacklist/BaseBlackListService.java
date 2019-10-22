@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,6 +52,12 @@ public abstract class BaseBlackListService<BlRecordType extends BlackListRecord,
                         .orElseThrow(RecordNotFoundException::new);
         BlRecordType updated = updateRecordFields(values, record);
         repository.save(updated);
+    }
+
+    @Transactional
+    public void deleteRecord(int recordId){
+        BlRecordType record = repository.findById(recordId).orElseThrow(RecordNotFoundException::new);
+        repository.delete(record);
     }
 
     abstract String[] getFieldsNames();

@@ -11,5 +11,10 @@
             <column name="pass_ser" value="6754"/>
             <column name="pass_num" value="985634"/>
         </insert>
+        <insert tableName="inn_bl">
+            <column name="id" value="1234"/>
+            <column name="creator_id" value="0"/>
+            <column name="inn_num" value="657895"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>

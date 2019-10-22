@@ -21,6 +21,7 @@ public class PersonalInfoBLRecord implements BlackListRecord {
     @Getter
     private Integer id;
 
+    @Getter
     private Integer creatorId;
 
     @Size(max = 100, message = "Максимум 100 знаков")

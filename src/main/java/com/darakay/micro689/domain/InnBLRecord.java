@@ -21,6 +21,7 @@ public class InnBLRecord implements BlackListRecord {
     @Getter
     private Integer id;
 
+    @Getter
     private Integer creatorId;
 
     @Size(max = 6, min = 6, message = "Номер ИНН может содержать только 6 знаков")

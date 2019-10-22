@@ -40,4 +40,11 @@ public class BlackListResource {
         blackListService.updateRecord(blType, recordId, values);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{black-list-type}/{record-id}")
+    public ResponseEntity deleteRecord(@PathVariable("black-list-type") String blType,
+                                       @PathVariable("record-id") int recordId) {
+        blackListService.deleteRecord(blType, 0, recordId);
+        return ResponseEntity.noContent().build();
+    }
 }

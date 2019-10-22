@@ -1,7 +1,10 @@
 package com.darakay.micro689.domain;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -21,7 +24,7 @@ public class FullFilledBLRecord implements BlackListRecord {
     @Getter
     private Integer id;
 
-    @Setter
+    @Getter
     private Integer creatorId;
 
     @Size(max = 100, message = "Максимум 100 знаков")
