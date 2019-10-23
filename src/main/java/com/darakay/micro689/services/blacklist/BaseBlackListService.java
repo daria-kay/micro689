@@ -1,13 +1,15 @@
 package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.domain.BlackListRecord;
+import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.exception.CannotReadFileException;
 import com.darakay.micro689.exception.InternalServerException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -17,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +29,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public abstract class BaseBlackListService<BlRecordType extends BlackListRecord,
-        Repo extends CrudRepository<BlRecordType, Integer>> {
+        Repo extends PagingAndSortingRepository<BlRecordType, Integer>> {
 
     private Repo repository;
     private Function<Integer, BlRecordType> createRecordWith;
@@ -60,7 +63,39 @@ public abstract class BaseBlackListService<BlRecordType extends BlackListRecord,
         repository.delete(record);
     }
 
+    public List<BlackListRecordDTO> getRecords(Pageable pageable){
+        return StreamSupport.stream(repository.findAll(pageable).spliterator(), true)
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
     abstract String[] getFieldsNames();
+
+    private BlackListRecordDTO mapToDTO(BlRecordType record){
+        BlackListRecordDTO dto = new BlackListRecordDTO();
+        Set<String> setOfNames = Stream.of(getFieldsNames()).collect(Collectors.toSet());
+        Stream.of(record.getClass().getDeclaredFields())
+                .filter(field -> setOfNames.contains(field.getName()))
+                .forEach(field -> setValue(getFiledValue(field, record), getDTOField(field.getName()), dto));
+        return dto;
+    }
+
+    private Field getDTOField(String name){
+        try {
+            return BlackListRecordDTO.class.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            throw new InternalServerException();
+        }
+    }
+
+    private String getFiledValue(Field field, Object obj){
+        field.setAccessible(true);
+        try {
+            return field.get(obj).toString();
+        } catch (IllegalAccessException e) {
+            throw new InternalServerException();
+        }
+    }
 
     private Iterable<BlRecordType> parseSCVFile(MultipartFile multipartFile,
                                                   Function<Integer, BlRecordType> newEmptyRecord,
@@ -106,7 +141,7 @@ public abstract class BaseBlackListService<BlRecordType extends BlackListRecord,
         setValue(value, field, blRecordType);
     }
 
-    private void setValue(String value, Field field, BlRecordType record){
+    private void setValue(String value, Field field, Object record){
         field.setAccessible(true);
         try {
             if(field.getType().equals(Date.class))

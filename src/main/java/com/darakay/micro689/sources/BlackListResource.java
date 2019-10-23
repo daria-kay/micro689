@@ -1,11 +1,14 @@
 package com.darakay.micro689.sources;
 
+import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.services.BlackListService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -46,5 +49,13 @@ public class BlackListResource {
                                        @PathVariable("record-id") int recordId) {
         blackListService.deleteRecord(blType, 0, recordId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{black-list-type}")
+    public ResponseEntity<List<BlackListRecordDTO>> getRecords(
+            @PathVariable("black-list-type") String blType,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "50") int size) {
+        return ResponseEntity.ok().body(blackListService.getRecords(blType, PageRequest.of(page, size)));
     }
 }

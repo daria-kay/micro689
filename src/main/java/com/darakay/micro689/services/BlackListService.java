@@ -1,10 +1,14 @@
 package com.darakay.micro689.services;
 
+import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
 import com.darakay.micro689.services.blacklist.BaseBlackListService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +41,10 @@ public class BlackListService {
 
     public void deleteRecord(String blType, int creatorId, int recordId) {
         getAppropriateBlackListService(blType).deleteRecord(recordId);
+    }
+
+    public List<BlackListRecordDTO> getRecords(String blType, Pageable pageable) {
+        return getAppropriateBlackListService(blType).getRecords(pageable);
     }
 }
 
