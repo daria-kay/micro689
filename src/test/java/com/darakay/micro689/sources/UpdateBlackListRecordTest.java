@@ -80,6 +80,23 @@ public class UpdateBlackListRecordTest {
     }
 
     @Test
+    public void shouldReturn400ResponseCode_UnmappedFields() throws Exception {
+        HashMap<String, String> testMap = new HashMap<>();
+        testMap.put("passportSeria", "7845");
+        testMap.put("creatorId", "0");
+
+        mockMvc.perform(
+                put(URL, "passport-info", "1234")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(testMap)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message")
+                        .value("Некорректное поле 'creatorId'"));
+
+        assertThat(passportInfoBLRepository.existsById(1234)).isTrue();
+    }
+
+    @Test
     public void shouldReturn400ResponseCode_EmptyRequestBody() throws Exception {
         mockMvc.perform(
                 put(URL, "passport-info", "1234")

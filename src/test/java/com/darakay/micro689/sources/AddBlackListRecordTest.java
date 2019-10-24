@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AddBlackListRecordTest {
 
-    private static final String URL = "/api/v1/black-list/personal-info/add-entry-task";
+    private static final String URL = "/api/v1/black-list/{list-type}/add-entry-task";
 
     @Autowired
     private PersonalInfoBLRepository personalInfoBLRepository;
@@ -43,7 +43,7 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(post(URL, "personal-info")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated());
@@ -59,7 +59,7 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(post(URL, "personal-info")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -70,7 +70,7 @@ public class AddBlackListRecordTest {
     }
 
     @Test
-    public void return400Response_WhenFieldValueIsInvalid() throws Exception {
+    public void return400Response_WhenRequestValueIsInvalid_InvalidFormat() throws Exception {
 
         Map<String, String> map = new HashMap<>();
         map.put("surname", "Петров");
@@ -78,7 +78,7 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987/07/14");
 
-        mockMvc.perform(post(URL, "full-filled")
+        mockMvc.perform(post(URL, "personal-info")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -87,6 +87,35 @@ public class AddBlackListRecordTest {
                                 "Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
 
         assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
+    }
+
+    @Test
+    public void return400Response_WhenRequestIsInvalid_TooLong() throws Exception {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("passportSeria", "123456");
+        map.put("passportNumber", "123456");
+
+        mockMvc.perform(post(URL, "passport-info")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message")
+                        .value("Серия пасспорта может содержать только 4 знака"));
+    }
+
+    @Test
+    public void ignore_WhenFieldValueIsInvalid_UnknownField() throws Exception {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("passportSeria", "1234");
+        map.put("passportNumber", "asdyuo");
+        map.put("name", "value");
+
+        mockMvc.perform(post(URL, "passport-info")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isCreated());
     }
 
     @Test

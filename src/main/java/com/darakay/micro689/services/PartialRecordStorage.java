@@ -13,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -29,7 +27,10 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
 
     protected PartialRecordStorage(Repo repository, Supplier<BlRecordType> newRecord, CSVFileReader csvFileReader) {
         this.repository = repository;
-        this.blackListRecordMapper = BlackListRecordMapper.forBlackListRecord(newRecord).excludeFields("id");
+        this.blackListRecordMapper =
+                BlackListRecordMapper.forRecord(newRecord)
+                        .excludeFields("id")
+                        .nullableFields("creatorId");
         this.csvFileReader = csvFileReader;
     }
 
@@ -72,7 +73,7 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
     }
 
     public boolean canHandle(Set<String> fieldNames){
-        Set<String> intersection = Sets.intersection(fieldNames, ImmutableSet.of(getCSVHeaders()));
+        Set<String> intersection = Sets.intersection(fieldNames, new HashSet<>(Arrays.asList(getCSVHeaders())));
         return !intersection.isEmpty();
     }
 

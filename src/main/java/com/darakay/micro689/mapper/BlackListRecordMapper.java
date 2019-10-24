@@ -9,10 +9,7 @@ import com.google.common.collect.Sets;
 
 import java.lang.reflect.Field;
 import java.sql.Date;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,66 +18,58 @@ public class BlackListRecordMapper<BlRecordType> {
 
 
     private final Supplier<BlRecordType> newBlackListRecord;
-    private Set<String> fieldNames;
+    private final Set<String> requiredFields;
+    private final Set<String> nullableFields;
 
-    private BlackListRecordMapper(Supplier<BlRecordType> newBlackListRecord) {
+    private BlackListRecordMapper(Supplier<BlRecordType> newBlackListRecord, Set<String> fieldNames, Set<String> nullableFields) {
         this.newBlackListRecord = newBlackListRecord;
-        fieldNames = Stream.of(newBlackListRecord.get().getClass().getDeclaredFields())
-                .map(Field::getName)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        this.requiredFields = fieldNames;
+        this.nullableFields = nullableFields;
     }
 
-    public static <BlackListRecordType> BlackListRecordMapper<BlackListRecordType> forBlackListRecord(
+    public static <BlackListRecordType> BlackListRecordMapper<BlackListRecordType> forRecord(
             Supplier<BlackListRecordType> blackListRecordInitialzr){
-        return new BlackListRecordMapper<BlackListRecordType>(blackListRecordInitialzr);
+        return new BlackListRecordMapper<>(blackListRecordInitialzr,
+                Stream.of(blackListRecordInitialzr.get().getClass().getDeclaredFields())
+                .map(Field::getName)
+                .collect(Collectors.toCollection(LinkedHashSet::new)), ImmutableSet.of());
     }
 
     public BlRecordType mapToBlackListRecord(Map<String, String> fields){
         BlRecordType record = newBlackListRecord.get();
         Stream.of(record.getClass().getDeclaredFields())
-                .filter(field -> fieldNames.contains(field.getName()))
-                .forEach(field -> checkAndSetValue(fields, field, record));
+                .forEach(field -> checkAndSetValue(fields, field, record,
+                        InvalidRecordFormatException.missingRequiredField(field.getName())));
         return record;
     }
 
     public BlRecordType mapToBlackListRecordExample(Map<String, String> fields){
         BlRecordType record = newBlackListRecord.get();
         Stream.of(record.getClass().getDeclaredFields())
-                .filter(field -> fieldNames.contains(field.getName()))
-                .forEach(field -> setUncheckedValues(fields, field, record));
+                .forEach(field -> checkAndSetValue(fields, field, record,
+                        InvalidRequestFormatException.missingRequiredField(field.getName())));
         return record;
     }
 
     public BlackListRecordDTO mapToDTO(BlRecordType record){
         BlackListRecordDTO dto = new BlackListRecordDTO();
         Stream.of(record.getClass().getDeclaredFields())
-                .filter(field -> fieldNames.contains(field.getName()))
+                .filter(field -> requiredFields.contains(field.getName()))
                 .forEach(field -> setValue(getFiledValue(field, record), getDTOField(field.getName()), dto));
         return dto;
     }
 
-    public BlRecordType updateRecordFields(Map<String, String> values, BlRecordType record){
-        if(values.isEmpty())
+    public BlRecordType updateRecordFields(Map<String, String> values, BlRecordType record) {
+        if (values.isEmpty())
             throw InvalidRecordFormatException.emptyValuesMap();
         values.keySet().forEach(key -> {
-            if(!fieldNames.contains(key))
+            if (!requiredFields.contains(key))
                 throw InvalidRecordFormatException.uknownField(key);
         });
         Stream.of(record.getClass().getDeclaredFields())
                 .filter(field -> values.containsKey(field.getName()))
                 .forEach(field -> setValue(values.get(field.getName()), field, record));
         return record;
-    }
-
-    private void setUncheckedValues(Map<String, String> values, Field field, BlRecordType blRecordType) {
-        String fieldName = field.getName();
-        if(fieldName.equals("creatorId")) {
-            setValue(values.get(fieldName), field, blRecordType);
-            return;
-        }
-        String value =  Optional.ofNullable(values.get(fieldName))
-                .orElseThrow(() -> InvalidRequestFormatException.missingRequiredField(fieldName));
-        setValue(value, field, blRecordType);
     }
 
     private Field getDTOField(String name){
@@ -100,10 +89,13 @@ public class BlackListRecordMapper<BlRecordType> {
         }
     }
 
-    private void checkAndSetValue(Map<String, String> values, Field field, BlRecordType blRecordType){
+    private void checkAndSetValue(Map<String, String> values, Field field,
+                                  BlRecordType blRecordType, RuntimeException ex){
         String fieldName = field.getName();
-        String value =  Optional.ofNullable(values.get(fieldName))
-                .orElseThrow(() -> InvalidRecordFormatException.missingRequiredField(fieldName));
+        String value = values.get(fieldName);
+        if(requiredFields.contains(fieldName) && value == null) {
+            throw ex;
+        }
         setValue(value, field, blRecordType);
     }
 
@@ -137,7 +129,13 @@ public class BlackListRecordMapper<BlRecordType> {
     }
 
     public BlackListRecordMapper<BlRecordType> excludeFields(String... excludedFieldsNames) {
-        this.fieldNames = Sets.difference(fieldNames, ImmutableSet.of(excludedFieldsNames));
-        return this;
+        Set<String> diff = Sets.difference(requiredFields, new HashSet<>(Arrays.asList(excludedFieldsNames)));
+        return new BlackListRecordMapper<>(newBlackListRecord, diff, nullableFields);
+    }
+
+    public BlackListRecordMapper<BlRecordType> nullableFields(String... nullableFieldsNames) {
+        Set<String> setOf = new HashSet<>(Arrays.asList(nullableFieldsNames));
+        Set<String> diff = Sets.difference(requiredFields, setOf);
+        return new BlackListRecordMapper<>(newBlackListRecord, diff, setOf);
     }
 }
