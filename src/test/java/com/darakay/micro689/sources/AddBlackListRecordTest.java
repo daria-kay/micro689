@@ -14,7 +14,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,8 +46,6 @@ public class AddBlackListRecordTest {
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated());
-
-        assertThat(personalInfoBLRepository.existsBySurname("Иванов")).isTrue();
     }
 
     @Test
@@ -65,8 +62,6 @@ public class AddBlackListRecordTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message")
                         .value("Не заполнено обязательное поле 'firstName'"));
-
-        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 
     @Test
@@ -85,8 +80,6 @@ public class AddBlackListRecordTest {
                 .andExpect(jsonPath("$.message")
                         .value("Неверный формат даты рождения. " +
                                 "Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
-
-        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 
     @Test
@@ -130,7 +123,5 @@ public class AddBlackListRecordTest {
         mockMvc.perform(post(URL, "full-filled")
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isUnsupportedMediaType());
-
-        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 }
