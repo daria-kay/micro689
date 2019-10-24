@@ -3,6 +3,8 @@ package com.darakay.micro689.sources;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResultDTO;
 import com.darakay.micro689.services.BlackListRecordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+@Api("Операции с черными списками")
 @RestController
 @RequestMapping("/api/v1/black-list")
 public class BlackListResource {
@@ -22,6 +25,8 @@ public class BlackListResource {
         this.mainService = mainService;
     }
 
+    @ApiOperation(value = "Загрузка записей черных списков из csv файла",
+            notes = "csv файл без заголовков, с ';' в качестве разделителя полей")
     @PostMapping("/{black-list-type}/upload-task")
     public ResponseEntity uploadCsvFile(@PathVariable("black-list-type") String blType,
                                         @RequestParam("csv") MultipartFile multipartFile) {
@@ -30,6 +35,7 @@ public class BlackListResource {
         return ResponseEntity.created(URI.create("")).build();
     }
 
+    @ApiOperation("Добавление записи в черный список")
     @PostMapping("/{black-list-type}/add-entry-task")
     public ResponseEntity addEntry(@PathVariable("black-list-type") String blType,
                                    @RequestBody Map<String, String> request){
@@ -37,11 +43,13 @@ public class BlackListResource {
         return ResponseEntity.created(URI.create("")).build();
     }
 
-    @PostMapping("/find-matches-task")
+    @ApiOperation("Поиск совпадений в черных списках по переданным полям")
+    @PostMapping(value = "/find-matches-task", produces = "application/json")
     public ResponseEntity<FindMatchesResultDTO> findRecords(@RequestBody Map<String, String> values){
         return ResponseEntity.ok(mainService.findMatches(values));
     }
 
+    @ApiOperation("Редактирование записи черного списка")
     @PutMapping("/{black-list-type}/{record-id}")
     public ResponseEntity updateRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId,
@@ -50,6 +58,7 @@ public class BlackListResource {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation("Удаление записи из черного списка")
     @DeleteMapping("/{black-list-type}/{record-id}")
     public ResponseEntity deleteRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId) {
@@ -57,7 +66,8 @@ public class BlackListResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{black-list-type}")
+    @ApiOperation("Получение всех записей по типу черного списка")
+    @GetMapping(value = "/{black-list-type}", produces = "application/json")
     public ResponseEntity<List<BlackListRecordDTO>> getRecords(
             @PathVariable("black-list-type") String blType,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
