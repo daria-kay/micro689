@@ -121,7 +121,7 @@ public class BlackListRecordMapper<BlRecordType> {
                 return;
             }
             if (field.getType().equals(String.class)) {
-                field.set(record, Integer.valueOf(value));
+                field.set(record, value);
             }
         } catch (IllegalAccessException e) {
             throw InternalServerException.cannotMap();

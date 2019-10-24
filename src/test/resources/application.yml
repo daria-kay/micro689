@@ -7,10 +7,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-          #id:
-          #new_generator_mappings: false
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-test-master.xml
     contexts: test
   datasource:
     url: jdbc:tc:postgresql:///databasename
