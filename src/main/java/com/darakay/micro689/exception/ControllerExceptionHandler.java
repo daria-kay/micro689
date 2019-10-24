@@ -1,5 +1,6 @@
 package com.darakay.micro689.exception;
 
+import com.darakay.micro689.dto.TaskResultDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,5 +29,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity handleMethodArgumentTypeMismatchException(){
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(InvalidRequestFormatException.class)
+    public ResponseEntity handleInvalidRequestFormatException(InvalidRequestFormatException ex){
+        return ResponseEntity.ok(TaskResultDTO.error(ex.getMessage()));
     }
 }

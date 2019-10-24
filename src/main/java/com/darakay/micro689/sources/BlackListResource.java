@@ -1,7 +1,8 @@
 package com.darakay.micro689.sources;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.services.BlackListService;
+import com.darakay.micro689.dto.TaskResultDTO;
+import com.darakay.micro689.services.MainService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,39 +16,44 @@ import java.util.Map;
 @RequestMapping("/api/v1/black-list")
 public class BlackListResource {
 
-    private final BlackListService blackListService;
+    private final MainService mainService;
 
-    public BlackListResource(BlackListService blackListService) {
-        this.blackListService = blackListService;
+    public BlackListResource(MainService mainService) {
+        this.mainService = mainService;
     }
 
     @PostMapping("/{black-list-type}/upload-task")
     public ResponseEntity uploadCsvFile(@PathVariable("black-list-type") String blType,
                                         @RequestParam("csv") MultipartFile multipartFile) {
 
-        blackListService.handleFile(blType, multipartFile, 0);
-        return ResponseEntity.created(URI.create("/api/v1/black-list/" + blType)).build();
+        mainService.handleFile(blType, multipartFile, 0);
+        return ResponseEntity.created(URI.create("")).build();
     }
 
     @PostMapping("/{black-list-type}/add-entry-task")
     public ResponseEntity addEntry(@PathVariable("black-list-type") String blType,
                                    @RequestBody Map<String, String> request){
-        int id = blackListService.addEntry(blType, request, 0);
-        return ResponseEntity.created(URI.create("/api/v1/black-list/"+blType+"/"+id)).build();
+        mainService.addEntry(blType, request, 0);
+        return ResponseEntity.created(URI.create("")).build();
+    }
+
+    @PostMapping("/find-record-task")
+    public ResponseEntity<TaskResultDTO> findRecords(@RequestBody Map<String, String> values){
+        return ResponseEntity.ok(mainService.checkRecordExist(values));
     }
 
     @PutMapping("/{black-list-type}/{record-id}")
     public ResponseEntity updateRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId,
                                        @RequestBody Map<String, String> values){
-        blackListService.updateRecord(blType, recordId, values);
+        mainService.updateRecord(blType,recordId, values);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{black-list-type}/{record-id}")
     public ResponseEntity deleteRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId) {
-        blackListService.deleteRecord(blType, 0, recordId);
+        mainService.deleteRecord(blType, 0, recordId);
         return ResponseEntity.noContent().build();
     }
 
@@ -56,6 +62,6 @@ public class BlackListResource {
             @PathVariable("black-list-type") String blType,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "50") int size) {
-        return ResponseEntity.ok().body(blackListService.getRecords(blType, PageRequest.of(page, size)));
+        return ResponseEntity.ok().body(mainService.getRecords(blType, PageRequest.of(page, size)));
     }
 }

@@ -14,8 +14,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InnBLRecord implements BlackListRecord {
-    private final static int CSV_COLUMN_COUNT = 1;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter

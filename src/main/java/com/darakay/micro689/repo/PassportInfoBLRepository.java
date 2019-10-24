@@ -5,6 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PassportInfoBLRepository extends PagingAndSortingRepository<PassportInfoBLRecord, Integer> {
+public interface PassportInfoBLRepository extends BlackListRepository<PassportInfoBLRecord> {
     boolean existsByPassportNumber(String passportNumber);
 }

@@ -5,7 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PhoneBlRepository extends PagingAndSortingRepository<PhoneBLRecord, Integer> {
+public interface PhoneBlRepository extends BlackListRepository<PhoneBLRecord> {
 
     boolean existsByPhone(String phone);
 }

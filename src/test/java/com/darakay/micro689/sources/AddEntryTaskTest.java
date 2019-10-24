@@ -1,6 +1,6 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.repo.FullFilledBLRepository;
+import com.darakay.micro689.repo.PersonalInfoBLRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AddEntryTaskTest {
 
-    private static final String URL = "/api/v1/black-list/{black-list-type}/add-entry-task";
+    private static final String URL = "/api/v1/black-list/personal-info/add-entry-task";
 
     @Autowired
-    private FullFilledBLRepository fullFilledBLRepository;
+    private PersonalInfoBLRepository personalInfoBLRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,18 +42,13 @@ public class AddEntryTaskTest {
         map.put("firstName", "Иван");
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
-        map.put("passportSeria", "1234");
-        map.put("passportNumber", "123456");
-        map.put("inn", "123456");
-        map.put("phone", "+78927856526");
-        map.put("email", "ivan@yandex.ru");
 
-        mockMvc.perform(post(URL, "full-filled")
+        mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated());
 
-        assertThat(fullFilledBLRepository.existsBySurname("Иванов")).isTrue();
+        assertThat(personalInfoBLRepository.existsBySurname("Иванов")).isTrue();
     }
 
     @Test
@@ -63,20 +58,15 @@ public class AddEntryTaskTest {
         map.put("surname", "Петров");
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
-        map.put("passportSeria", "1234");
-        map.put("passportNumber", "123456");
-        map.put("inn", "123456");
-        map.put("phone", "+78927856526");
-        map.put("email", "ivan@yandex.ru");
 
-        mockMvc.perform(post(URL, "full-filled")
+        mockMvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message")
                         .value("Не заполнено обязательное поле 'firstName'"));
 
-        assertThat(fullFilledBLRepository.existsBySurname("Петров")).isFalse();
+        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 
     @Test
@@ -86,21 +76,17 @@ public class AddEntryTaskTest {
         map.put("surname", "Петров");
         map.put("firstName", "Иван");
         map.put("secondName", "Иванович");
-        map.put("birthDate", "1987-07-14");
-        map.put("passportSeria", "123456789");
-        map.put("passportNumber", "123456");
-        map.put("inn", "123456");
-        map.put("phone", "+78927856526");
-        map.put("email", "ivan@yandex.ru");
+        map.put("birthDate", "1987/07/14");
 
         mockMvc.perform(post(URL, "full-filled")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message")
-                        .value("Серия пасспорта может содержать только 4 знака"));
+                        .value("Неверный формат даты рождения. " +
+                                "Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
 
-        assertThat(fullFilledBLRepository.existsBySurname("Петров")).isFalse();
+        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 
     @Test
@@ -111,16 +97,11 @@ public class AddEntryTaskTest {
         map.put("firstName", "Иван");
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
-        map.put("passportSeria", "123456789");
-        map.put("passportNumber", "123456");
-        map.put("inn", "123456");
-        map.put("phone", "+78927856526");
-        map.put("email", "ivan@yandex.ru");
 
         mockMvc.perform(post(URL, "full-filled")
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isUnsupportedMediaType());
 
-        assertThat(fullFilledBLRepository.existsBySurname("Петров")).isFalse();
+        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isFalse();
     }
 }

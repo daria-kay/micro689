@@ -34,9 +34,6 @@ public class UploadCSVFileTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private FullFilledBLRepository fullFilledBLRepository;
-
-    @Autowired
     private PersonalInfoBLRepository personalInfoBLRepository;
 
     @Autowired
@@ -62,7 +59,7 @@ public class UploadCSVFileTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        assertThat(fullFilledBLRepository.existsBySurname("Петров")).isTrue();
+        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isTrue();
     }
 
     @Test
@@ -139,14 +136,14 @@ public class UploadCSVFileTest {
     public void shouldReturn_400Response_ForInvalidFileFormat_WrongDataFormat() throws Exception {
         mockMvc.perform(
                 multipart(UPLOAD_URL, "personal-info")
-                        .file(new MockMultipartFile("csv", "Иванов;Иван;Иванович;1987/07/07".getBytes()))
+                        .file(new MockMultipartFile("csv", "Суриков;Иван;Иванович;1987/07/07".getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
                         .value("Неверный формат даты рождения." +
                                 " Ожидается гггг-[м]м-[д]д (ведущий ноль опционален)"));
 
-        assertThat(personalInfoBLRepository.existsBySurname("Иванов")).isFalse();
+        assertThat(personalInfoBLRepository.existsBySurname("Суриков")).isFalse();
 
     }
 
@@ -246,7 +243,7 @@ public class UploadCSVFileTest {
             sb.append("Петров;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));
-            sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9]"));
+            sb.append(fakeValuesService.regexify("1970-01-01"));
             sb.append("\n");
         }
         return new MockMultipartFile("csv", null,

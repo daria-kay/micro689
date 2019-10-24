@@ -1,21 +1,3 @@
-CREATE TABLE "full_filled_bl"
-(
-    "id"          serial       NOT NULL,
-    "creator_id"  integer      NOT NULL,
-    "first_name"  varchar(100) NOT NULL,
-    "second_name" varchar(100) NOT NULL,
-    "surname"     varchar(100) NOT NULL,
-    "birth_date"  DATE         NOT NULL,
-    "pass_ser"    varchar(4)   NOT NULL,
-    "pass_num"    varchar(6)   NOT NULL,
-    "inn_num"     varchar(6)   NOT NULL,
-    "phone"       varchar(12)  NOT NULL,
-    "email"       varchar(100) NOT NULL,
-    CONSTRAINT "full_filled_bl_pk" PRIMARY KEY ("id")
-);
-
-
-
 CREATE TABLE "user"
 (
     "user_id"    serial      NOT NULL,
@@ -91,10 +73,6 @@ CREATE TABLE "email_bl"
     CONSTRAINT "email_bl_pk" PRIMARY KEY ("id")
 );
 
-
-
-ALTER TABLE "full_filled_bl"
-    ADD CONSTRAINT "full_filled_bl_fk0" FOREIGN KEY ("creator_id") REFERENCES "user" ("user_id");
 
 ALTER TABLE "user"
     ADD CONSTRAINT "user_fk0" FOREIGN KEY ("partner_id") REFERENCES "partner" ("id");

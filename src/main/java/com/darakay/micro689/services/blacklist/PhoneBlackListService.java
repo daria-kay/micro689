@@ -2,17 +2,20 @@ package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.domain.PhoneBLRecord;
 import com.darakay.micro689.repo.PhoneBlRepository;
+import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 
 @Service("phone")
-public class PhoneBlackListService extends BaseBlackListService<PhoneBLRecord, PhoneBlRepository> {
+public class PhoneBlackListService extends PartialRecordStorage<PhoneBLRecord, PhoneBlRepository> {
 
-    public PhoneBlackListService(PhoneBlRepository phoneBlRepository) {
-        super(phoneBlRepository, PhoneBLRecord::new);
+    private final String[] CSV_HEADERS = {"phone"};
+
+    public PhoneBlackListService(PhoneBlRepository phoneBlRepository, CSVFileReader csvFileReader) {
+        super(phoneBlRepository, PhoneBLRecord::new, csvFileReader);
     }
 
     @Override
-    String[] getFieldsNames() {
-        return new String[]{"phone"};
+    public String[] getCSVHeaders() {
+        return CSV_HEADERS;
     }
 }

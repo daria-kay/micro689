@@ -5,6 +5,22 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="micro689" id="changelog-test-insert1" context="test">
+        <insert tableName="personal_info_bl">
+            <column name="id" value="10001"/>
+            <column name="creator_id" value="0"/>
+            <column name="first_name" value="Иван"/>
+            <column name="second_name" value="Иванович"/>
+            <column name="surname" value="Иванов"/>
+            <column name="birth_date" value="1970-01-01"/>
+        </insert>
+        <insert tableName="personal_info_bl">
+            <column name="id" value="10002"/>
+            <column name="creator_id" value="1"/>
+            <column name="first_name" value="Иван"/>
+            <column name="second_name" value="Иванович"/>
+            <column name="surname" value="Иванов"/>
+            <column name="birth_date" value="1970-01-01"/>
+        </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1234"/>
             <column name="creator_id" value="0"/>
@@ -45,6 +61,16 @@
             <column name="id" value="1234"/>
             <column name="creator_id" value="0"/>
             <column name="inn_num" value="657895"/>
+        </insert>
+        <insert tableName="phone_bl">
+            <column name="id" value="1234"/>
+            <column name="creator_id" value="0"/>
+            <column name="phone" value="+78953475143"/>
+        </insert>
+        <insert tableName="email_bl">
+            <column name="id" value="1234"/>
+            <column name="creator_id" value="0"/>
+            <column name="email" value="ivan@yandex.ru"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

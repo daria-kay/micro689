@@ -2,17 +2,20 @@ package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.domain.EmailBLRecord;
 import com.darakay.micro689.repo.EmailBLRepository;
+import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 
 @Service("email")
-public class EmailBlackListService extends BaseBlackListService<EmailBLRecord, EmailBLRepository> {
+public class EmailBlackListService extends PartialRecordStorage<EmailBLRecord, EmailBLRepository> {
 
-    public EmailBlackListService(EmailBLRepository emailBLRepository) {
-        super(emailBLRepository, EmailBLRecord::new);
+    private final String[] CSV_HEADERS = {"email"};
+
+    public EmailBlackListService(EmailBLRepository emailBLRepository, CSVFileReader csvFileReader) {
+        super(emailBLRepository, EmailBLRecord::new, csvFileReader);
     }
 
     @Override
-    String[] getFieldsNames() {
-        return new String[] {"email"};
+    public String[] getCSVHeaders() {
+        return CSV_HEADERS;
     }
 }

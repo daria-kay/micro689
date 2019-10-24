@@ -2,17 +2,20 @@ package com.darakay.micro689.services.blacklist;
 
 import com.darakay.micro689.domain.PassportInfoBLRecord;
 import com.darakay.micro689.repo.PassportInfoBLRepository;
+import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 
 @Service("passport-info")
-public class PassportInfoBlackListService extends BaseBlackListService<PassportInfoBLRecord, PassportInfoBLRepository> {
+public class PassportInfoBlackListService extends PartialRecordStorage<PassportInfoBLRecord, PassportInfoBLRepository> {
 
-    public PassportInfoBlackListService(PassportInfoBLRepository passportInfoBLRepository) {
-        super(passportInfoBLRepository, PassportInfoBLRecord::new);
+    private final String[] CSV_HEADERS = {"passportSeria", "passportNumber"};
+
+    public PassportInfoBlackListService(PassportInfoBLRepository passportInfoBLRepository, CSVFileReader csvFileReader) {
+        super(passportInfoBLRepository, PassportInfoBLRecord::new, csvFileReader);
     }
 
     @Override
-    public String[] getFieldsNames() {
-        return new String[] {"passportSeria", "passportNumber"};
+    public String[] getCSVHeaders() {
+        return CSV_HEADERS;
     }
 }

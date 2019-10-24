@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InnBLRepository extends PagingAndSortingRepository<InnBLRecord, Integer> {
+public interface InnBLRepository extends BlackListRepository<InnBLRecord> {
     List<InnBLRecord> findByInn(String innNumber);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
@@ -34,8 +35,4 @@ public class PersonalInfoBLRecord implements BlackListRecord {
     private String secondName;
 
     private Date birthDate;
-
-    public PersonalInfoBLRecord(int creatorId) {
-        this.creatorId = creatorId;
-    }
 }

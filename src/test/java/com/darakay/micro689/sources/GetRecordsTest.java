@@ -28,7 +28,7 @@ public class GetRecordsTest {
 
     @Test
     public void returnEmptyList_WhenBlackListIsEmpty() throws Exception {
-        mockMvc.perform(get(URL, "full-filled"))
+        mockMvc.perform(get(URL, "inn"))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .json("[]"));
