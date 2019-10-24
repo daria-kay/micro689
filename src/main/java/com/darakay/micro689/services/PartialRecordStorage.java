@@ -5,6 +5,7 @@ import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.BlackListRepository;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -51,8 +52,6 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
                 .collect(Collectors.toList()));
     }
 
-
-
     public void updateRecord(int recordId, Map<String, String> values){
         BlRecordType record = repository.findById(recordId)
                         .orElseThrow(RecordNotFoundException::new);
@@ -73,12 +72,8 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
     }
 
     public boolean canHandle(Set<String> fieldNames){
-        Set<String> intersection = Sets.intersection(fieldNames, blackListRecordMapper.getFieldNames());
-        return !containsOnlyCreatorId(intersection) && intersection.size() != 0;
-    }
-
-    private boolean containsOnlyCreatorId(Set<String> intersection) {
-        return intersection.contains("creatorId") && intersection.size() == 1;
+        Set<String> intersection = Sets.intersection(fieldNames, ImmutableSet.of(getCSVHeaders()));
+        return !intersection.isEmpty();
     }
 
     public boolean existRecord(Map<String, String> values){
