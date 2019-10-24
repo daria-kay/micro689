@@ -1,8 +1,7 @@
-package com.darakay.micro689.services.blacklist;
+package com.darakay.micro689.services;
 
 import com.darakay.micro689.domain.PersonalInfoBLRecord;
 import com.darakay.micro689.repo.PersonalInfoBLRepository;
-import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 
 @Service("personal-info")

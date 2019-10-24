@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class FindRecordTest {
+public class FindMatchesTest {
 
-    private final static String URL = "/api/v1/black-list/find-record-task";
+    private final static String URL = "/api/v1/black-list/find-matches-task";
 
     @Autowired
     private MockMvc mockMvc;

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddEntryTaskTest {
+public class AddBlackListRecordTest {
 
     private static final String URL = "/api/v1/black-list/personal-info/add-entry-task";
 

@@ -1,10 +1,8 @@
 package com.darakay.micro689.services;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.TaskResultDTO;
+import com.darakay.micro689.dto.FindMatchesResultDTO;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
-import com.darakay.micro689.services.blacklist.BLRecordStorage;
-import com.darakay.micro689.services.blacklist.PartialRecordStorage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,12 +12,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class MainService {
+public class BlackListRecordService {
 
     private final Map<String, BLRecordStorage> recordsStorage;
     private final Map<String, PartialRecordStorage> blackListsServices;
 
-    public MainService(Map<String, BLRecordStorage> blackListServiceMap, Map<String, PartialRecordStorage> blackListsServices) {
+    public BlackListRecordService(Map<String, BLRecordStorage> blackListServiceMap, Map<String, PartialRecordStorage> blackListsServices) {
         this.recordsStorage = blackListServiceMap;
         this.blackListsServices = blackListsServices;
     }
@@ -44,16 +42,12 @@ public class MainService {
         return getAppropriateBlackListService(blType).getRecords(pageable);
     }
 
-    public TaskResultDTO checkRecordExist(Map<String, String> values) {
-        return findMatches(values);
-    }
-
-    private TaskResultDTO findMatches(Map<String, String> values) {
+    public FindMatchesResultDTO findMatches(Map<String, String> values) {
         boolean generalResult = blackListsServices.values().stream()
                 .filter(blackList -> blackList.canHandle(values.keySet()))
                 .map(baseBlackListService -> baseBlackListService.existRecord(values))
                 .anyMatch(result -> result.equals(true));
-        return TaskResultDTO.grasefull(generalResult);
+        return FindMatchesResultDTO.grasefull(generalResult);
     }
 
     private BLRecordStorage getAppropriateRecordStorage(String serviceType) {

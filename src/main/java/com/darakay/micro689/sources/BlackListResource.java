@@ -1,8 +1,8 @@
 package com.darakay.micro689.sources;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.TaskResultDTO;
-import com.darakay.micro689.services.MainService;
+import com.darakay.micro689.dto.FindMatchesResultDTO;
+import com.darakay.micro689.services.BlackListRecordService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +16,9 @@ import java.util.Map;
 @RequestMapping("/api/v1/black-list")
 public class BlackListResource {
 
-    private final MainService mainService;
+    private final BlackListRecordService mainService;
 
-    public BlackListResource(MainService mainService) {
+    public BlackListResource(BlackListRecordService mainService) {
         this.mainService = mainService;
     }
 
@@ -37,9 +37,9 @@ public class BlackListResource {
         return ResponseEntity.created(URI.create("")).build();
     }
 
-    @PostMapping("/find-record-task")
-    public ResponseEntity<TaskResultDTO> findRecords(@RequestBody Map<String, String> values){
-        return ResponseEntity.ok(mainService.checkRecordExist(values));
+    @PostMapping("/find-matches-task")
+    public ResponseEntity<FindMatchesResultDTO> findRecords(@RequestBody Map<String, String> values){
+        return ResponseEntity.ok(mainService.findMatches(values));
     }
 
     @PutMapping("/{black-list-type}/{record-id}")

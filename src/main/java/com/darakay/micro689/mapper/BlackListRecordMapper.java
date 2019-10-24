@@ -18,22 +18,22 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Mapper<BlRecordType> {
+public class BlackListRecordMapper<BlRecordType> {
 
     private final Supplier<BlRecordType> createBlackListRecord;
     @Getter
     private Set<String> fieldNames;
 
-    private Mapper(Supplier<BlRecordType> createBlackListRecord) {
+    private BlackListRecordMapper(Supplier<BlRecordType> createBlackListRecord) {
         this.createBlackListRecord = createBlackListRecord;
         fieldNames = Stream.of(createBlackListRecord.get().getClass().getDeclaredFields())
                 .map(Field::getName)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public static <BlackListRecordType>  Mapper<BlackListRecordType> forBlackListRecord(
+    public static <BlackListRecordType> BlackListRecordMapper<BlackListRecordType> forBlackListRecord(
             Supplier<BlackListRecordType> blackListRecordInitialzr){
-        return new Mapper<BlackListRecordType>(blackListRecordInitialzr);
+        return new BlackListRecordMapper<BlackListRecordType>(blackListRecordInitialzr);
     }
 
     public BlRecordType mapToBlackListRecord(Map<String, String> fields){
@@ -135,7 +135,7 @@ public class Mapper<BlRecordType> {
         }
     }
 
-    public Mapper<BlRecordType> excludeFields(String... excludedFieldsNames) {
+    public BlackListRecordMapper<BlRecordType> excludeFields(String... excludedFieldsNames) {
         this.fieldNames = Sets.difference(fieldNames, ImmutableSet.of(excludedFieldsNames));
         return this;
     }

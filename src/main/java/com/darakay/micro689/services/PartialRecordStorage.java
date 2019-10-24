@@ -1,11 +1,10 @@
-package com.darakay.micro689.services.blacklist;
+package com.darakay.micro689.services;
 
 import com.darakay.micro689.domain.BlackListRecord;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.exception.RecordNotFoundException;
-import com.darakay.micro689.mapper.Mapper;
+import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.BlackListRepository;
-import com.darakay.micro689.services.CSVFileReader;
 import com.google.common.collect.Sets;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -24,12 +23,12 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
         Repo extends BlackListRepository<BlRecordType>> implements BLRecordStorage {
 
     private Repo repository;
-    private final Mapper<BlRecordType> mapper;
+    private final BlackListRecordMapper<BlRecordType> blackListRecordMapper;
     private final CSVFileReader csvFileReader;
 
     protected PartialRecordStorage(Repo repository, Supplier<BlRecordType> newRecord, CSVFileReader csvFileReader) {
         this.repository = repository;
-        this.mapper = Mapper.forBlackListRecord(newRecord).excludeFields("id");
+        this.blackListRecordMapper = BlackListRecordMapper.forBlackListRecord(newRecord).excludeFields("id");
         this.csvFileReader = csvFileReader;
     }
 
@@ -41,14 +40,14 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
     @Override
     public void storeRecord(int creatorId, Map<String, String> values){
         assignRecordTo(creatorId, values);
-        BlRecordType record = mapper.mapToBlackListRecord(values);
+        BlRecordType record = blackListRecordMapper.mapToBlackListRecord(values);
         repository.save(record);
     }
 
     void storeRecords(int creatorId, List<Map<String, String>> values){
         repository.saveAll(values.stream()
                 .map(record -> assignRecordTo(creatorId, record))
-                .map(mapper::mapToBlackListRecord)
+                .map(blackListRecordMapper::mapToBlackListRecord)
                 .collect(Collectors.toList()));
     }
 
@@ -57,7 +56,7 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
     public void updateRecord(int recordId, Map<String, String> values){
         BlRecordType record = repository.findById(recordId)
                         .orElseThrow(RecordNotFoundException::new);
-        BlRecordType updated = mapper.updateRecordFields(values, record);
+        BlRecordType updated = blackListRecordMapper.updateRecordFields(values, record);
         repository.save(updated);
     }
 
@@ -69,12 +68,12 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
 
     public List<BlackListRecordDTO> getRecords(Pageable pageable){
         return StreamSupport.stream(repository.findAll(pageable).spliterator(), true)
-                .map(mapper::mapToDTO)
+                .map(blackListRecordMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     public boolean canHandle(Set<String> fieldNames){
-        Set<String> intersection = Sets.intersection(fieldNames, mapper.getFieldNames());
+        Set<String> intersection = Sets.intersection(fieldNames, blackListRecordMapper.getFieldNames());
         return !containsOnlyCreatorId(intersection) && intersection.size() != 0;
     }
 
@@ -83,7 +82,7 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
     }
 
     public boolean existRecord(Map<String, String> values){
-        BlRecordType record = mapper.mapToBlackListRecordExample(values);
+        BlRecordType record = blackListRecordMapper.mapToBlackListRecordExample(values);
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues().withIgnorePaths("id");
         Example<BlRecordType> example = Example.of(record, matcher);
         return repository.exists(example);

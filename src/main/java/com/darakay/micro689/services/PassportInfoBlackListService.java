@@ -1,8 +1,7 @@
-package com.darakay.micro689.services.blacklist;
+package com.darakay.micro689.services;
 
 import com.darakay.micro689.domain.PassportInfoBLRecord;
 import com.darakay.micro689.repo.PassportInfoBLRepository;
-import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 
 @Service("passport-info")

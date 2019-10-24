@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateBlackListrRecordTest {
+public class UpdateBlackListRecordTest {
 
     private final static String URL = "/api/v1/black-list/{black-list-type}/{record-id}";
 

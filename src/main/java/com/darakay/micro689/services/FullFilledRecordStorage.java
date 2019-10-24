@@ -1,6 +1,5 @@
-package com.darakay.micro689.services.blacklist;
+package com.darakay.micro689.services;
 
-import com.darakay.micro689.services.CSVFileReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

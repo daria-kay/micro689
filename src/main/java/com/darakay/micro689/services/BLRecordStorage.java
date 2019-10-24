@@ -1,4 +1,4 @@
-package com.darakay.micro689.services.blacklist;
+package com.darakay.micro689.services;
 
 import org.springframework.web.multipart.MultipartFile;
 
