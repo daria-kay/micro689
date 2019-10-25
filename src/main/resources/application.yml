@@ -12,5 +12,22 @@ spring:
     username: micro689_usr
     password: pass
     driver-class-name: org.postgresql.Driver
+---
+spring:
+  profiles: prod
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    username: ${DB_USR}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+---
 
 
