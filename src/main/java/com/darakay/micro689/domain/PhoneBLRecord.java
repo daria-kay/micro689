@@ -20,13 +20,6 @@ public class PhoneBLRecord implements BlackListRecord {
     @Getter
     private Integer id;
 
-    @Getter
-    private Integer creatorId;
-
     @Size(max = 12, message = "Максимум 12 знаков")
     private String phone;
-
-    public PhoneBLRecord(int creatorId) {
-        this.creatorId = creatorId;
-    }
 }

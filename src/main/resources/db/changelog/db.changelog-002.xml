@@ -4,13 +4,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="micro689" id="insert-fake-user">
+    <changeSet author="micro689" id="insert-fake-user" context="prod">
         <insert tableName="partner">
             <column name="id" value="0"/>
             <column name="name" value="test_partner"/>
         </insert>
         <insert tableName="user">
-            <column name="user_id" value="0"/>
+            <column name="id" value="0"/>
             <column name="login" value="test_user"/>
             <column name="pw" value="test_pw"/>
             <column name="partner_id" value="0"/>

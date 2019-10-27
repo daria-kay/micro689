@@ -7,7 +7,6 @@
     <changeSet author="micro689" id="changelog-test-insert1" context="test">
         <insert tableName="personal_info_bl">
             <column name="id" value="10001"/>
-            <column name="creator_id" value="0"/>
             <column name="first_name" value="Иван"/>
             <column name="second_name" value="Иванович"/>
             <column name="surname" value="Иванов"/>
@@ -15,7 +14,6 @@
         </insert>
         <insert tableName="personal_info_bl">
             <column name="id" value="10002"/>
-            <column name="creator_id" value="1"/>
             <column name="first_name" value="Иван"/>
             <column name="second_name" value="Иванович"/>
             <column name="surname" value="Иванов"/>
@@ -23,53 +21,44 @@
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1234"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="6754"/>
             <column name="pass_num" value="985634"/>
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1235"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="6538"/>
             <column name="pass_num" value="275396"/>
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1236"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="8263"/>
             <column name="pass_num" value="983567"/>
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1237"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="8249"/>
             <column name="pass_num" value="839263"/>
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1238"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="7403"/>
             <column name="pass_num" value="739372"/>
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1239"/>
-            <column name="creator_id" value="0"/>
             <column name="pass_ser" value="2462"/>
             <column name="pass_num" value="257215"/>
         </insert>
         <insert tableName="inn_bl">
             <column name="id" value="1234"/>
-            <column name="creator_id" value="0"/>
             <column name="inn_num" value="657895"/>
         </insert>
         <insert tableName="phone_bl">
             <column name="id" value="1234"/>
-            <column name="creator_id" value="0"/>
             <column name="phone" value="+78953475143"/>
         </insert>
         <insert tableName="email_bl">
             <column name="id" value="1234"/>
-            <column name="creator_id" value="0"/>
             <column name="email" value="ivan@yandex.ru"/>
         </insert>
     </changeSet>

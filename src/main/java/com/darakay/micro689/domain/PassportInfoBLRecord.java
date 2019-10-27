@@ -20,8 +20,6 @@ public class PassportInfoBLRecord implements BlackListRecord {
     @Getter
     private Integer id;
 
-    @Getter
-    private Integer creatorId;
 
     @Size(max = 4, min = 4, message = "Серия пасспорта может содержать только 4 знака")
     @Column(name = "pass_ser")
@@ -30,8 +28,4 @@ public class PassportInfoBLRecord implements BlackListRecord {
     @Size(max = 6, min = 6, message = "Номер пасспорта может содержать только 6 знаков")
     @Column(name = "pass_num")
     private String passportNumber;
-
-    public PassportInfoBLRecord(int creatorId) {
-        this.creatorId = creatorId;
-    }
 }
