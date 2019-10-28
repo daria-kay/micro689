@@ -1,5 +1,7 @@
 package com.darakay.micro689.sources;
 
+import com.darakay.micro689.repo.PassportInfoBLRepository;
+import com.darakay.micro689.repo.PersonalInfoBLRepository;
 import com.darakay.micro689.repo.RecordsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +30,19 @@ public class DeleteBlackListRecordTest {
     @Autowired
     private RecordsRepository recordsRepository;
 
+    @Autowired
+    private PersonalInfoBLRepository personalInfoBLRepository;
+
+    @Autowired
+    private PassportInfoBLRepository passportInfoBLRepository;
+
     @Test
     public void deleteRecord_RecordIdIsValid() throws Exception {
-        mockMvc.perform(delete(URL, "002")).andExpect(status().isNoContent());
+        mockMvc.perform(delete(URL, "10003")).andExpect(status().isNoContent());
 
-        assertThat(recordsRepository.existsById(2)).isFalse();
+        assertThat(recordsRepository.existsById(10003)).isFalse();
+        assertThat(personalInfoBLRepository.existsById(10003)).isFalse();
+        assertThat(passportInfoBLRepository.existsById(10003)).isFalse();
     }
 
     @Test

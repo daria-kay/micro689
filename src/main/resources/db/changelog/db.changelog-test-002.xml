@@ -19,6 +19,13 @@
             <column name="surname" value="Иванов"/>
             <column name="birth_date" value="1970-01-01"/>
         </insert>
+        <insert tableName="personal_info_bl">
+            <column name="id" value="10003"/>
+            <column name="first_name" value="Иван"/>
+            <column name="second_name" value="Иванович"/>
+            <column name="surname" value="Иванов"/>
+            <column name="birth_date" value="1970-01-01"/>
+        </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1234"/>
             <column name="pass_ser" value="6754"/>
@@ -46,6 +53,11 @@
         </insert>
         <insert tableName="passport_info_bl">
             <column name="id" value="1239"/>
+            <column name="pass_ser" value="2462"/>
+            <column name="pass_num" value="257215"/>
+        </insert>
+        <insert tableName="passport_info_bl">
+            <column name="id" value="10003"/>
             <column name="pass_ser" value="2462"/>
             <column name="pass_num" value="257215"/>
         </insert>
@@ -94,6 +106,12 @@
             <column name="inn_id" value="343435"/>
             <column name="phone_id" value="12345"/>
             <column name="email_id" value="12345"/>
+        </insert>
+        <insert tableName="record">
+            <column name="id" value="10003"/>
+            <column name="creator_id" value="0"/>
+            <column name="personal_id" value="10003"/>
+            <column name="passport_id" value="10003"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -16,23 +16,23 @@ public class Record {
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     private User creator;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "personal_id", referencedColumnName = "id")
     private PersonalInfoBLRecord personalInfo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "passport_id", referencedColumnName = "id")
     private PassportInfoBLRecord passportInfo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "inn_id", referencedColumnName = "id")
     private InnBLRecord inn;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "phone_id", referencedColumnName = "id")
     private PhoneBLRecord phone;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "email_id", referencedColumnName = "id")
     private EmailBLRecord email;
 }
