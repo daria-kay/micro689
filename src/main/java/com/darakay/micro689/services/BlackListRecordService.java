@@ -35,7 +35,7 @@ public class BlackListRecordService {
     }
 
     public void updateRecord(String blType, int recordId, Map<String, String> values) {
-        getAppropriateBlackListService(blType).updateRecord(recordId, values);
+        recordStorage.updateRecord(blType, recordId, values);
     }
 
     public void deleteRecord(int creatorId, int recordId) {

@@ -1,6 +1,8 @@
 package com.darakay.micro689.sources;
 
+import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.repo.PassportInfoBLRepository;
+import com.darakay.micro689.repo.RecordsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class UpdateBlackListRecordTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
+    private RecordsRepository recordsRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -42,12 +47,12 @@ public class UpdateBlackListRecordTest {
         testMap.put("passportNumber", "907645");
 
         mockMvc.perform(
-                    put(URL, "passport-info", "1234")
+                    put(URL, "passport-info", "1")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isOk());
-
-        assertThat(passportInfoBLRepository.existsByPassportNumber("907645")).isTrue();
+        Record record = recordsRepository.findById(1).get();
+        assertThat(record.getPassportInfo().getPassportNumber()).isEqualTo("907645");
     }
 
     @Test
@@ -56,7 +61,7 @@ public class UpdateBlackListRecordTest {
         testMap.put("surname", "Иванов");
 
         mockMvc.perform(
-                put(URL, "passport-info", "1234")
+                put(URL, "passport-info", "1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -71,7 +76,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "1234")
+                put(URL, "passport-info", "1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -88,7 +93,7 @@ public class UpdateBlackListRecordTest {
         testMap.put("creatorId", "0");
 
         mockMvc.perform(
-                put(URL, "passport-info", "1234")
+                put(URL, "passport-info", "1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -101,7 +106,7 @@ public class UpdateBlackListRecordTest {
     @Test
     public void shouldReturn400ResponseCode_EmptyRequestBody() throws Exception {
         mockMvc.perform(
-                put(URL, "passport-info", "1234")
+                put(URL, "passport-info", "1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
 
@@ -113,7 +118,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "1234")
+                put(URL, "passport-info", "1")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isUnsupportedMediaType());

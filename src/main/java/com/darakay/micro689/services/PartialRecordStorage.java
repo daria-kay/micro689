@@ -1,21 +1,15 @@
 package com.darakay.micro689.services;
 
 import com.darakay.micro689.domain.BlackListRecord;
-import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.BlackListRepository;
-import com.google.common.collect.Sets;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
         Repo extends BlackListRepository<BlRecordType>> implements BLRecordStorage {
