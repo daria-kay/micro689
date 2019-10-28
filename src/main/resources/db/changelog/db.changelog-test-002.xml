@@ -91,7 +91,7 @@
         </insert>
         <insert tableName="record">
             <column name="id" value="10001"/>
-            <column name="creator_id" value="0"/>
+            <column name="creator_id" value="1000"/>
             <column name="personal_id" value="10001"/>
             <column name="passport_id" value="1234"/>
             <column name="inn_id" value="1234"/>
@@ -100,7 +100,7 @@
         </insert>
         <insert tableName="record">
             <column name="id" value="10002"/>
-            <column name="creator_id" value="0"/>
+            <column name="creator_id" value="1000"/>
             <column name="personal_id" value="10002"/>
             <column name="passport_id" value="1237"/>
             <column name="inn_id" value="343435"/>
@@ -109,7 +109,7 @@
         </insert>
         <insert tableName="record">
             <column name="id" value="10003"/>
-            <column name="creator_id" value="0"/>
+            <column name="creator_id" value="1000"/>
             <column name="personal_id" value="10003"/>
             <column name="passport_id" value="10003"/>
         </insert>

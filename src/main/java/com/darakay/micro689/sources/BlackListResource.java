@@ -32,14 +32,14 @@ public class BlackListResource {
             notes = "csv файл без заголовков, с ';' в качестве разделителя полей")
     @PostMapping("/upload-task")
     public ResponseEntity uploadCsvFile(@RequestParam("csv") MultipartFile multipartFile) {
-        blackListRecordService.storeRecords(0, multipartFile);
+        blackListRecordService.storeRecords(1000, multipartFile);
         return ResponseEntity.created(URI.create("")).build();
     }
 
     @ApiOperation("Добавление записи в черный список")
     @PostMapping("/add-entry-task")
     public ResponseEntity addEntry(@RequestBody Map<String, String> request){
-        int recordId = blackListRecordService.storeRecord(0, request);
+        int recordId = blackListRecordService.storeRecord(1000, request);
         return ResponseEntity.created(URI.create("/api/v1/black-list/" + recordId)).build();
     }
 
