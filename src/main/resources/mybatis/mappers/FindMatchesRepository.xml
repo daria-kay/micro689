@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.darakay.micro689.repo.FindMatchesRepository">
-    <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="com.darakay.micro689.dto.MatchSearchRequest">
+    <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="com.darakay.micro689.dto.BlackListRecordDTO">
         SELECT EXISTS (SELECT * FROM record
         JOIN (
         SELECT "user".id as creator, partner.id as partner FROM "user" JOIN partner ON "user".partner_id = partner.id)
@@ -32,7 +32,7 @@
      )
     </select>
 
-    <select id="findMatches" resultType="boolean" parameterType="com.darakay.micro689.dto.MatchSearchRequest">
+    <select id="findMatches" resultType="boolean" parameterType="com.darakay.micro689.dto.BlackListRecordDTO">
         SELECT EXISTS (SELECT * FROM record
         JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
         JOIN passport_info_bl pib ON record.passport_id = pib.id

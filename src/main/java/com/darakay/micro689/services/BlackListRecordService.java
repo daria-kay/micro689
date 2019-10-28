@@ -2,7 +2,6 @@ package com.darakay.micro689.services;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
-import com.darakay.micro689.dto.MatchSearchRequest;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,11 +42,11 @@ public class BlackListRecordService {
         getAppropriateBlackListService(blType).deleteRecord(recordId);
     }
 
-    public List<BlackListRecordDTO> getRecords(String blType, Pageable pageable) {
-        return getAppropriateBlackListService(blType).getRecords(pageable);
+    public List<BlackListRecordDTO> getRecords(Pageable pageable) {
+        return recordStorage.getRecords(pageable);
     }
 
-    public FindMatchesResult findMatches(MatchSearchRequest request) {
+    public FindMatchesResult findMatches(BlackListRecordDTO request) {
        return recordStorage.findMatches(request);
     }
 

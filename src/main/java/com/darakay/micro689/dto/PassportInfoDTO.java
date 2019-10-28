@@ -1,5 +1,6 @@
 package com.darakay.micro689.dto;
 
+import com.darakay.micro689.domain.PassportInfoBLRecord;
 import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -26,5 +27,10 @@ public class PassportInfoDTO {
             throw InvalidRequestFormatException.missingRequiredField("passportInfo");
         this.passportSeria = passportSeria;
         this.passportNumber = passportNumber;
+    }
+
+    public PassportInfoDTO(PassportInfoBLRecord record) {
+        this.passportSeria = record.getPassportSeria();
+        this.passportNumber = record.getPassportNumber();
     }
 }

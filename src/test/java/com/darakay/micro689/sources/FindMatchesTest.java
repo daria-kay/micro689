@@ -1,6 +1,6 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.dto.MatchSearchRequest;
+import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.PassportInfoDTO;
 import com.darakay.micro689.dto.PersonalInfoDTO;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_SearchesPartiallyRecordsWithPartnerId_WhenMatchesExist() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))
                 .partnerId(0).build();
@@ -55,7 +55,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_SearchesAllPartiallyRecordsWithoutPartnerId_WhenMatchesExist() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .personalInfo((new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01"))))
                 .build();
@@ -71,7 +71,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnAllBlocks_WithoutPartnerId() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))
                 .passportInfo(new PassportInfoDTO("6538", "275396"))
@@ -91,7 +91,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnSeveralBlocks_WithoutPartnerId() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-02-01")))
                 .passportInfo(new PassportInfoDTO("6538", "275396"))
@@ -111,7 +111,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereAreNotMatchesOnAllBlocks_WithoutPatrnerId() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Петров", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-02-01")))
                 .passportInfo(new PassportInfoDTO("1274", "783486"))
@@ -131,7 +131,7 @@ public class FindMatchesTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnAllBlocks_WithPartnerId() throws Exception {
-        MatchSearchRequest request = MatchSearchRequest.builder()
+        BlackListRecordDTO request = BlackListRecordDTO.builder()
                 .partnerId(1234)
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))

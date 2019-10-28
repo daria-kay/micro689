@@ -2,7 +2,6 @@ package com.darakay.micro689.sources;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
-import com.darakay.micro689.dto.MatchSearchRequest;
 import com.darakay.micro689.services.BlackListRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +46,7 @@ public class BlackListResource {
 
     @ApiOperation("Поиск совпадений в черных списках по переданным полям")
     @PostMapping(value = "/find-matches-task", produces = "application/json")
-    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody MatchSearchRequest request){
+    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody BlackListRecordDTO request){
         return ResponseEntity.ok(mainService.findMatches(request));
     }
 
@@ -69,11 +68,10 @@ public class BlackListResource {
     }
 
     @ApiOperation("Получение всех записей по типу черного списка")
-    @GetMapping(value = "/{black-list-type}", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<BlackListRecordDTO>> getRecords(
-            @PathVariable("black-list-type") String blType,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "50") int size) {
-        return ResponseEntity.ok().body(mainService.getRecords(blType, PageRequest.of(page, size)));
+        return ResponseEntity.ok().body(mainService.getRecords(PageRequest.of(page, size)));
     }
 }

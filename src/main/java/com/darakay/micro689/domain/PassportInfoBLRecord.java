@@ -13,13 +13,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class PassportInfoBLRecord implements BlackListRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Integer id;
-
 
     @Size(max = 4, min = 4, message = "Серия пасспорта может содержать только 4 знака")
     @Column(name = "pass_ser")

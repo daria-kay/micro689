@@ -1,5 +1,6 @@
 package com.darakay.micro689.dto;
 
+import com.darakay.micro689.domain.PersonalInfoBLRecord;
 import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -32,5 +33,12 @@ public class PersonalInfoDTO {
         this.firstName = firstName;
         this.secondName = secondName;
         this.birthDate = birthDate;
+    }
+
+    public PersonalInfoDTO(PersonalInfoBLRecord record){
+        this.surname = record.getSurname();
+        this.firstName = record.getFirstName();
+        this.secondName = record.getSecondName();
+        this.birthDate = record.getBirthDate();
     }
 }

@@ -1,10 +1,10 @@
 package com.darakay.micro689.repo;
 
-import com.darakay.micro689.dto.MatchSearchRequest;
+import com.darakay.micro689.dto.BlackListRecordDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface FindMatchesRepository {
-    boolean findMatchesWithPartnerId(MatchSearchRequest request);
-    boolean findMatches(MatchSearchRequest request);
+    boolean findMatchesWithPartnerId(BlackListRecordDTO request);
+    boolean findMatches(BlackListRecordDTO request);
 }

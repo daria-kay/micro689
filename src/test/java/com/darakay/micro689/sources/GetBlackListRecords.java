@@ -22,29 +22,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class GetBlackListRecords {
-    private final static String URL = "/api/v1/black-list/{black-list-type}";
+    private final static String URL = "/api/v1/black-list/";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     public void returnRecordsList_WithoutPagination() throws Exception {
-        mockMvc.perform(get(URL, "passport-info"))
+       mockMvc.perform(get(URL))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(Files.contentOf(new File("src/test/resources/expected_records.json"),
-                                StandardCharsets.UTF_8)));
-    }
-
-    @Test
-    public void returnRecordsList_WithPagination() throws Exception {
-        mockMvc.perform(
-                    get(URL, "passport-info")
-                    .param("page", "1")
-                    .param("size", "3"))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .json(Files.contentOf(new File("src/test/resources/exp_records_with_pagination.json"),
+                        .json(Files.contentOf(new File("src/test/resources/exp_records.json"),
                                 StandardCharsets.UTF_8)));
     }
 

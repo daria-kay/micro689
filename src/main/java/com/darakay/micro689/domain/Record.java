@@ -1,8 +1,11 @@
 package com.darakay.micro689.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Record {
 
     @Id

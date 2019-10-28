@@ -1,6 +1,9 @@
 package com.darakay.micro689.mapper;
 
+import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.dto.BlackListRecordDTO;
+import com.darakay.micro689.dto.PassportInfoDTO;
+import com.darakay.micro689.dto.PersonalInfoDTO;
 import com.darakay.micro689.exception.InternalServerException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
 import com.darakay.micro689.exception.InvalidRequestFormatException;
@@ -27,6 +30,17 @@ public class BlackListRecordMapper<BlRecordType> {
         this.nullableFields = nullableFields;
     }
 
+    public static BlackListRecordDTO mapToDTO(Record record){
+        return BlackListRecordDTO.builder()
+                .id(record.getId())
+                .personalInfo(new PersonalInfoDTO(record.getPersonalInfo()))
+                .passportInfo(new PassportInfoDTO(record.getPassportInfo()))
+                .inn(record.getInn().getInn())
+                .phone(record.getPhone().getPhone())
+                .email(record.getEmail().getEmail())
+                .build();
+    }
+
     public static <BlackListRecordType> BlackListRecordMapper<BlackListRecordType> forRecord(
             Supplier<BlackListRecordType> blackListRecordInitialzr){
         return new BlackListRecordMapper<>(blackListRecordInitialzr,
@@ -49,14 +63,6 @@ public class BlackListRecordMapper<BlRecordType> {
                 .forEach(field -> checkAndSetValue(fields, field, record,
                         InvalidRequestFormatException.missingRequiredField(field.getName())));
         return record;
-    }
-
-    public BlackListRecordDTO mapToDTO(BlRecordType record){
-        BlackListRecordDTO dto = new BlackListRecordDTO();
-        Stream.of(record.getClass().getDeclaredFields())
-                .filter(field -> requiredFields.contains(field.getName()))
-                .forEach(field -> setValue(getFiledValue(field, record), getDTOField(field.getName()), dto));
-        return dto;
     }
 
     public BlRecordType updateRecordFields(Map<String, String> values, BlRecordType record) {

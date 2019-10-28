@@ -65,11 +65,6 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
         repository.delete(record);
     }
 
-    public List<BlackListRecordDTO> getRecords(Pageable pageable){
-        return StreamSupport.stream(repository.findAll(pageable).spliterator(), true)
-                .map(blackListRecordMapper::mapToDTO)
-                .collect(Collectors.toList());
-    }
 
     public boolean canHandle(Set<String> fieldNames){
         Set<String> intersection = Sets.intersection(fieldNames, new HashSet<>(Arrays.asList(getCSVHeaders())));

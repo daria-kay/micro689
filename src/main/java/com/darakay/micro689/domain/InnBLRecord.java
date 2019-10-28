@@ -13,10 +13,10 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class InnBLRecord implements BlackListRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Integer id;
 
     @Size(max = 6, min = 6, message = "Номер ИНН может содержать только 6 знаков")
