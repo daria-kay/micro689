@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class DeleteBlackListRecordTest {
     private final static String URL = "/api/v1/black-list/{black-list-type}/{record-id}";
 
@@ -28,9 +30,9 @@ public class DeleteBlackListRecordTest {
 
     @Test
     public void deleteRecord_RecordIdIsValid() throws Exception {
-        mockMvc.perform(delete(URL, "inn", "1234")).andExpect(status().isNoContent());
+        mockMvc.perform(delete(URL, "inn", "343434")).andExpect(status().isNoContent());
 
-        assertThat(innBLRepository.existsById(1234)).isFalse();
+        assertThat(innBLRepository.existsById(343434)).isFalse();
     }
 
     @Test

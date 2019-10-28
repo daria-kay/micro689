@@ -9,7 +9,7 @@ import java.util.Date;
 
 @JsonAutoDetect
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FindMatchesResultDTO {
+public class FindMatchesResult {
 
     @JsonProperty("status")
     private int status;
@@ -20,18 +20,18 @@ public class FindMatchesResultDTO {
     @JsonProperty("message")
     private String message;
 
-    private FindMatchesResultDTO(int status) {
+    private FindMatchesResult(int status) {
         this.status = status;
-        this.responseDate = new SimpleDateFormat("yyyy-mm-dd").format(new Date());
+        this.responseDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
 
-    private FindMatchesResultDTO(String message) {
+    private FindMatchesResult(String message) {
         this.status = 0;
         this.message = message;
     }
 
-    public static FindMatchesResultDTO grasefull(boolean matches){
-        return new FindMatchesResultDTO(getStatus(matches));
+    public static FindMatchesResult gracefull(boolean matches){
+        return new FindMatchesResult(getStatus(matches));
     }
 
     private static int getStatus(boolean matches){
@@ -40,7 +40,7 @@ public class FindMatchesResultDTO {
         return 2;
     }
 
-    public static FindMatchesResultDTO error(String message) {
-        return new FindMatchesResultDTO(message);
+    public static FindMatchesResult error(String message) {
+        return new FindMatchesResult(message);
     }
 }

@@ -50,6 +50,10 @@
             <column name="pass_num" value="257215"/>
         </insert>
         <insert tableName="inn_bl">
+            <column name="id" value="343434"/>
+            <column name="inn_num" value="657895"/>
+        </insert>
+        <insert tableName="inn_bl">
             <column name="id" value="1234"/>
             <column name="inn_num" value="657895"/>
         </insert>
@@ -60,6 +64,15 @@
         <insert tableName="email_bl">
             <column name="id" value="1234"/>
             <column name="email" value="ivan@yandex.ru"/>
+        </insert>
+        <insert tableName="record">
+            <column name="id" value="1"/>
+            <column name="creator_id" value="0"/>
+            <column name="personal_id" value="10001"/>
+            <column name="passport_id" value="1234"/>
+            <column name="inn_id" value="1234"/>
+            <column name="phone_id" value="1234"/>
+            <column name="email_id" value="1234"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

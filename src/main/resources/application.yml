@@ -34,9 +34,9 @@ spring:
   jpa:
     properties:
       hibernate:
-          jdbc:
-            lob:
-              non_contextual_creation: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     contexts: test
@@ -45,6 +45,6 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: postgres
     password:
----
-
+mybatis:
+  config-location: classpath:mybatis/config.xml
 

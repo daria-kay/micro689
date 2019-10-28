@@ -3,6 +3,7 @@ package com.darakay.micro689.domain;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "user", schema = "public")
 public class User {
 
     @Id

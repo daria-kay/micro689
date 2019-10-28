@@ -1,12 +1,14 @@
 package com.darakay.micro689.sources;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.FindMatchesResultDTO;
+import com.darakay.micro689.dto.FindMatchesResult;
+import com.darakay.micro689.dto.MatchSearchRequest;
 import com.darakay.micro689.services.BlackListRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,8 +47,8 @@ public class BlackListResource {
 
     @ApiOperation("Поиск совпадений в черных списках по переданным полям")
     @PostMapping(value = "/find-matches-task", produces = "application/json")
-    public ResponseEntity<FindMatchesResultDTO> findRecords(@RequestBody Map<String, String> values){
-        return ResponseEntity.ok(mainService.findMatches(values));
+    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody MatchSearchRequest request){
+        return ResponseEntity.ok(mainService.findMatches(request));
     }
 
     @ApiOperation("Редактирование записи черного списка")

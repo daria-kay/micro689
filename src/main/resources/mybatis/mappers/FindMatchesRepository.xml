@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.darakay.micro689.repo.FindMatchesRepository">
+    <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="com.darakay.micro689.dto.MatchSearchRequest">
+        SELECT EXISTS (SELECT * FROM record
+        JOIN (
+        SELECT "user".id as creator, partner.id as partner FROM "user" JOIN partner ON "user".partner_id = partner.id)
+        AS cp ON record.creator_id = cp.creator
+        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
+        JOIN passport_info_bl pib ON record.passport_id = pib.id
+        JOIN inn_bl ib on record.inn_id = ib.id
+        JOIN phone_bl pb on record.phone_id = pb.id
+        JOIN email_bl eb on record.email_id = eb.id
+        WHERE partner = #{partnerId} AND ( 1=0
+        <if test="personalInfo != null">
+            OR surname = #{personalInfo.surname} AND first_name = #{personalInfo.firstName} AND
+            second_name = #{personalInfo.secondName} AND birth_date = #{personalInfo.birthDate}
+        </if>
+        <if test="passportInfo != null">
+            OR pass_ser = #{passportInfo.passportSeria} AND pass_num = #{passportInfo.passportNumber}
+        </if>
+        <if test="inn != null">
+            OR inn_num = #{inn}
+        </if>
+        <if test="phone != null">
+            OR phone = #{phone}
+        </if>
+        <if test="email != null">
+            OR email = #{email}
+        </if>
+        )
+     )
+    </select>
+
+    <select id="findMatches" resultType="boolean" parameterType="com.darakay.micro689.dto.MatchSearchRequest">
+        SELECT EXISTS (SELECT * FROM record
+        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
+        JOIN passport_info_bl pib ON record.passport_id = pib.id
+        JOIN inn_bl ib on record.inn_id = ib.id
+        JOIN phone_bl pb on record.phone_id = pb.id
+        JOIN email_bl eb on record.email_id = eb.id
+        WHERE 1=0
+        <if test="personalInfo != null">
+            OR surname = #{personalInfo.surname} AND first_name = #{personalInfo.firstName}
+                   AND second_name = #{personalInfo.secondName} AND birth_date = #{personalInfo.birthDate}
+        </if>
+        <if test="passportInfo != null">
+             OR pass_ser = #{passportInfo.passportSeria} AND pass_num = #{passportInfo.passportNumber}
+        </if>
+        <if test="inn != null">
+            OR inn_num = #{inn}
+        </if>
+        <if test="phone != null">
+            OR phone = #{phone}
+        </if>
+        <if test="email != null">
+            OR email = #{email}
+        </if>
+    )
+    </select>
+</mapper>

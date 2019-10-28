@@ -1,7 +1,8 @@
 package com.darakay.micro689.services;
 
 import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.FindMatchesResultDTO;
+import com.darakay.micro689.dto.FindMatchesResult;
+import com.darakay.micro689.dto.MatchSearchRequest;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,14 @@ public class BlackListRecordService {
 
     private final Map<String, BLRecordStorage> recordsStorage;
     private final Map<String, PartialRecordStorage> blackListsServices;
+    private final RecordStorage recordStorage;
 
-    public BlackListRecordService(Map<String, BLRecordStorage> blackListServiceMap, Map<String, PartialRecordStorage> blackListsServices) {
+    public BlackListRecordService(Map<String, BLRecordStorage> blackListServiceMap,
+                                  Map<String, PartialRecordStorage> blackListsServices,
+                                  RecordStorage recordStorage) {
         this.recordsStorage = blackListServiceMap;
         this.blackListsServices = blackListsServices;
+        this.recordStorage = recordStorage;
     }
 
     public void handleFile(String blType, MultipartFile multipartFile, int creatorId) {
@@ -42,12 +47,8 @@ public class BlackListRecordService {
         return getAppropriateBlackListService(blType).getRecords(pageable);
     }
 
-    public FindMatchesResultDTO findMatches(Map<String, String> values) {
-        boolean generalResult = blackListsServices.values().stream()
-                .filter(blackList -> blackList.canHandle(values.keySet()))
-                .map(baseBlackListService -> baseBlackListService.existRecord(values))
-                .anyMatch(result -> result.equals(true));
-        return FindMatchesResultDTO.grasefull(generalResult);
+    public FindMatchesResult findMatches(MatchSearchRequest request) {
+       return recordStorage.findMatches(request);
     }
 
     private BLRecordStorage getAppropriateRecordStorage(String serviceType) {
