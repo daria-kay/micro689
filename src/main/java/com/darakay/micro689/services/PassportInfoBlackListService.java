@@ -5,7 +5,7 @@ import com.darakay.micro689.repo.PassportInfoBLRepository;
 import org.springframework.stereotype.Service;
 
 @Service("passport-info")
-public class PassportInfoBlackListService extends PartialRecordStorage<PassportInfoBLRecord, PassportInfoBLRepository> {
+public class PassportInfoBlackListService extends BlockRecordService<PassportInfoBLRecord, PassportInfoBLRepository> {
 
     private final String[] CSV_HEADERS = {"passportSeria", "passportNumber"};
 

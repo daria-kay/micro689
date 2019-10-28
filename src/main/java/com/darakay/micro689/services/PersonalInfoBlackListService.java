@@ -5,7 +5,7 @@ import com.darakay.micro689.repo.PersonalInfoBLRepository;
 import org.springframework.stereotype.Service;
 
 @Service("personal-info")
-public class PersonalInfoBlackListService extends PartialRecordStorage<PersonalInfoBLRecord, PersonalInfoBLRepository> {
+public class PersonalInfoBlackListService extends BlockRecordService<PersonalInfoBLRecord, PersonalInfoBLRepository> {
 
     private final String[] CSV_HEADERS = {"surname", "firstName", "secondName", "birthDate"};
 

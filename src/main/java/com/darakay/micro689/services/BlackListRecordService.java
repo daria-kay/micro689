@@ -8,11 +8,9 @@ import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.MyBatisRecordRepository;
 import com.darakay.micro689.repo.RecordsRepository;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.schema.Entry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +22,11 @@ import java.util.stream.StreamSupport;
 public class BlackListRecordService {
     private RecordsRepository recordsRepository;
     private MyBatisRecordRepository myBatisRecordRepository;
-    private Map<String, PartialRecordStorage> services;
+    private Map<String, BlockRecordService> services;
     private CSVFileReader csvFileReader;
 
     public BlackListRecordService(RecordsRepository recordsRepository,
-                                  MyBatisRecordRepository myBatisRecordRepository, Map<String, PartialRecordStorage> services,
+                                  MyBatisRecordRepository myBatisRecordRepository, Map<String, BlockRecordService> services,
                                   CSVFileReader csvFileReader) {
         this.recordsRepository = recordsRepository;
         this.myBatisRecordRepository = myBatisRecordRepository;
@@ -73,7 +71,7 @@ public class BlackListRecordService {
     public void updateRecord(String blockType, int recordId, Map<String, String> values) {
         Record record = recordsRepository.findById(recordId)
                 .orElseThrow(RecordNotFoundException::new);
-        PartialRecordStorage storage = services.get(blockType);
+        BlockRecordService storage = services.get(blockType);
         storage.updateRecord(getBlockId(record, blockType), values);
     }
 

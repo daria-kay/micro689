@@ -5,7 +5,7 @@ import com.darakay.micro689.repo.EmailBLRepository;
 import org.springframework.stereotype.Service;
 
 @Service("email")
-public class EmailBlackListService extends PartialRecordStorage<EmailBLRecord, EmailBLRepository> {
+public class EmailBlackListService extends BlockRecordService<EmailBLRecord, EmailBLRepository> {
 
     private final String[] CSV_HEADERS = {"email"};
 

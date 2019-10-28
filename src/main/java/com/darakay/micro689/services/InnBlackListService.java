@@ -5,7 +5,7 @@ import com.darakay.micro689.repo.InnBLRepository;
 import org.springframework.stereotype.Service;
 
 @Service("inn")
-public class InnBlackListService extends PartialRecordStorage<InnBLRecord, InnBLRepository> {
+public class InnBlackListService extends BlockRecordService<InnBLRecord, InnBLRepository> {
 
     private final String[] CSV_HEADERS = {"inn"};
 

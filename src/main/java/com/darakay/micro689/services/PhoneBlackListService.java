@@ -5,7 +5,7 @@ import com.darakay.micro689.repo.PhoneBlRepository;
 import org.springframework.stereotype.Service;
 
 @Service("phone")
-public class PhoneBlackListService extends PartialRecordStorage<PhoneBLRecord, PhoneBlRepository> {
+public class PhoneBlackListService extends BlockRecordService<PhoneBLRecord, PhoneBlRepository> {
 
     private final String[] CSV_HEADERS = {"phone"};
 

@@ -21,12 +21,10 @@ public class BlackListRecordMapper<BlRecordType> {
 
     private final Supplier<BlRecordType> newBlackListRecord;
     private final Set<String> requiredFields;
-    private final Set<String> nullableFields;
 
-    private BlackListRecordMapper(Supplier<BlRecordType> newBlackListRecord, Set<String> fieldNames, Set<String> nullableFields) {
+    private BlackListRecordMapper(Supplier<BlRecordType> newBlackListRecord, Set<String> fieldNames) {
         this.newBlackListRecord = newBlackListRecord;
         this.requiredFields = fieldNames;
-        this.nullableFields = nullableFields;
     }
 
     public static BlackListRecordDTO mapToDTO(Record record){
@@ -45,7 +43,7 @@ public class BlackListRecordMapper<BlRecordType> {
         return new BlackListRecordMapper<>(blackListRecordInitialzr,
                 Stream.of(blackListRecordInitialzr.get().getClass().getDeclaredFields())
                 .map(Field::getName)
-                .collect(Collectors.toCollection(LinkedHashSet::new)), ImmutableSet.of());
+                .collect(Collectors.toCollection(LinkedHashSet::new)));
     }
 
     public BlRecordType mapToBlackListRecord(Map<String, String> fields){
@@ -110,12 +108,6 @@ public class BlackListRecordMapper<BlRecordType> {
 
     public BlackListRecordMapper<BlRecordType> excludeFields(String... excludedFieldsNames) {
         Set<String> diff = Sets.difference(requiredFields, new HashSet<>(Arrays.asList(excludedFieldsNames)));
-        return new BlackListRecordMapper<>(newBlackListRecord, diff, nullableFields);
-    }
-
-    public BlackListRecordMapper<BlRecordType> nullableFields(String... nullableFieldsNames) {
-        Set<String> setOf = new HashSet<>(Arrays.asList(nullableFieldsNames));
-        Set<String> diff = Sets.difference(requiredFields, setOf);
-        return new BlackListRecordMapper<>(newBlackListRecord, diff, setOf);
+        return new BlackListRecordMapper<>(newBlackListRecord, diff);
     }
 }

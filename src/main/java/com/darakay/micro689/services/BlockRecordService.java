@@ -3,8 +3,8 @@ package com.darakay.micro689.services;
 import com.darakay.micro689.domain.BlackListRecord;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.mapper.BlackListRecordMapper;
-import com.darakay.micro689.repo.BlackListRepository;
 import com.google.common.collect.Sets;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,19 +12,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord, Repo extends BlackListRepository<BlRecordType>> {
+public abstract class BlockRecordService<BlRecordType extends BlackListRecord,
+        Repo extends CrudRepository<BlRecordType, Integer>> {
 
     private Repo repository;
     private final BlackListRecordMapper<BlRecordType> blackListRecordMapper;
 
-    protected PartialRecordStorage(Repo repository, Supplier<BlRecordType> newRecord) {
+    protected BlockRecordService(Repo repository, Supplier<BlRecordType> newRecord) {
         this.repository = repository;
         this.blackListRecordMapper =
                 BlackListRecordMapper.forRecord(newRecord)
-                        .excludeFields("id")
-                        .nullableFields("creatorId");
+                        .excludeFields("id");
     }
-
 
     Integer storeRecord(Map<String, String> values){
         if(canHandle(values.keySet())){
