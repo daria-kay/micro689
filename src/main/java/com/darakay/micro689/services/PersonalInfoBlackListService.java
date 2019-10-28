@@ -9,8 +9,8 @@ public class PersonalInfoBlackListService extends PartialRecordStorage<PersonalI
 
     private final String[] CSV_HEADERS = {"surname", "firstName", "secondName", "birthDate"};
 
-    public PersonalInfoBlackListService(PersonalInfoBLRepository personalInfoBLRepository, CSVFileReader csvFileReader) {
-        super(personalInfoBLRepository, PersonalInfoBLRecord::new, csvFileReader);
+    public PersonalInfoBlackListService(PersonalInfoBLRepository personalInfoBLRepository) {
+        super(personalInfoBLRepository, PersonalInfoBLRecord::new);
     }
 
     @Override

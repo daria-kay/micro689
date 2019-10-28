@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")public class UploadCSVFileTest {
 
-    private static final String UPLOAD_URL = "/api/v1/black-list/{black-list-type}/upload-task";
+    private static final String UPLOAD_URL = "/api/v1/black-list/upload-task";
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,17 +53,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToFullFilledBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "full-filled")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForFullFilledBL(10))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        assertThat(personalInfoBLRepository.existsBySurname("Петров")).isTrue();
+        assertThat(personalInfoBLRepository.existsBySurname("Босяков")).isTrue();
     }
 
     @Test
     public void shouldUploadCsvFile_ToPersonalInfoBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "personal-info")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForPersonalInfoBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
@@ -73,17 +73,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToPassportInfoBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "passport-info")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForPassportInfoBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        assertThat(passportInfoBLRepository.existsByPassportNumber("123456")).isTrue();
+        assertThat(passportInfoBLRepository.existsByPassportNumber("764598")).isTrue();
     }
 
     @Test
     public void shouldUploadCsvFile_ToInnBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "inn")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForInnBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
@@ -93,7 +93,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToPhoneBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "phone")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForPhoneBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
@@ -103,39 +103,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToEmailBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL, "email")
+        mockMvc.perform(multipart(UPLOAD_URL)
                 .file(getFakeCsvContentForEmailBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
-        assertThat(emailBLRepository.existsById(5)).isTrue();
-    }
-
-    @Test
-    public void shouldReturn_404Response_forNonexistentBLType() throws Exception {
-        mockMvc.perform(
-                multipart(UPLOAD_URL, "some-black-list")
-                        .file(new MockMultipartFile("csv", "filedata".getBytes()))
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isNotFound());
-
+        assertThat(emailBLRepository.findByEmail("test.mail@mail.com")).hasSize(5);
     }
 
     @Test
     public void shouldReturn_400Response_ForInvalidFileFormat_MissingRequiredColumn() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL, "passport-info")
-                        .file(new MockMultipartFile("csv", "1234".getBytes()))
+                multipart(UPLOAD_URL)
+                        .file(new MockMultipartFile("csv", ("surname;firstName;birthDate\n" +
+                                "Суриков;Иван;1987/07/07").getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
-                        .value("Не заполнено обязательное поле 'passportNumber'"));
+                        .value("Не заполнено обязательное поле 'secondName'"));
     }
 
     @Test
     public void shouldReturn_400Response_ForInvalidFileFormat_WrongDataFormat() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL, "personal-info")
-                        .file(new MockMultipartFile("csv", "Суриков;Иван;Иванович;1987/07/07".getBytes()))
+                multipart(UPLOAD_URL)
+                        .file(new MockMultipartFile("csv", ("surname;firstName;secondName;birthDate\n" +
+                                "Суриков;Иван;Иванович;1987/07/07").getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
@@ -149,7 +141,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     public void shouldReturn_400Response_ForMissingRequestParam() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL, "personal-info")
+                multipart(UPLOAD_URL)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest());
 
@@ -158,7 +150,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     public void shouldReturn_400Response_ForInvalidContentType() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL, "personal-info")
+                multipart(UPLOAD_URL)
                         .file(new MockMultipartFile("csv", "content".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
@@ -170,7 +162,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         byte[] content = new byte[10_000_000];
         new Random().nextBytes(content);
         mockMvc.perform(
-                multipart(UPLOAD_URL, "personal-info")
+                multipart(UPLOAD_URL)
                         .file(new MockMultipartFile("csv", content))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().is4xxClientError());
@@ -179,8 +171,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForEmailBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("email\n");
         for (int i = 0; i < recordCount; i++) {
-            sb.append(fakeValuesService.regexify("a[a-z]{5}\\@yandex.ru"));
+            sb.append("test.mail@mail.com");
             sb.append("\n");
         }
         return new MockMultipartFile("csv", null,
@@ -189,6 +182,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForPhoneBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("phone\n");
         for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("+7123456789"));
             sb.append("\n");
@@ -199,6 +193,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForInnBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("inn\n");
         for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("123456"));
             sb.append("\n");
@@ -209,9 +204,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForPassportInfoBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("passportSeria;passportNumber\n");
         for (int i = 0; i < recordCount; i++) {
             sb.append(fakeValuesService.regexify("[0-9]{4};"));
-            sb.append(fakeValuesService.regexify("123456"));
+            sb.append(fakeValuesService.regexify("764598"));
             sb.append("\n");
         }
         return new MockMultipartFile("csv", null,
@@ -220,8 +216,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("surname;firstName;secondName;birthDate;passportSeria;passportNumber;inn;phone;email\n");
         for (int i = 0; i < recordCount; i++) {
-            sb.append("Петров;");
+            sb.append("Босяков;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));
             sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9];"));
@@ -238,6 +235,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     private MockMultipartFile getFakeCsvContentForPersonalInfoBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
+        sb.append("surname;firstName;secondName;birthDate\n");
         for (int i = 0; i < recordCount; i++) {
             sb.append("Петров;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));

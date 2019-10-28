@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.darakay.micro689.repo.FindMatchesRepository">
+<mapper namespace="com.darakay.micro689.repo.MyBatisRecordRepository">
     <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="com.darakay.micro689.dto.BlackListRecordDTO">
         SELECT EXISTS (SELECT * FROM record
         JOIN (
@@ -58,4 +58,9 @@
         </if>
     )
     </select>
+
+    <insert id="insertMapAsRecord" useGeneratedKeys="true" keyColumn="id" parameterType="map">
+        INSERT INTO record (creator_id, personal_id, passport_id, inn_id, phone_id, email_id) VALUES
+        (#{creatorId}, #{personal-info}, #{passport-info}, #{inn}, #{phone}, #{email});
+    </insert>
 </mapper>

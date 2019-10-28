@@ -9,8 +9,8 @@ public class PassportInfoBlackListService extends PartialRecordStorage<PassportI
 
     private final String[] CSV_HEADERS = {"passportSeria", "passportNumber"};
 
-    public PassportInfoBlackListService(PassportInfoBLRepository passportInfoBLRepository, CSVFileReader csvFileReader) {
-        super(passportInfoBLRepository, PassportInfoBLRecord::new, csvFileReader);
+    public PassportInfoBlackListService(PassportInfoBLRepository passportInfoBLRepository) {
+        super(passportInfoBLRepository, PassportInfoBLRecord::new);
     }
 
     @Override

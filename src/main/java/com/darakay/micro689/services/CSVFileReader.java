@@ -18,16 +18,18 @@ import java.util.stream.Collectors;
 @Service
 public class CSVFileReader {
 
-    private final static CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withDelimiter(';');
+    private final static CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withFirstRecordAsHeader().withDelimiter(';');
 
-    public List<Map<String, String>> read(MultipartFile file, String[] headers){
-        return parseCSVFile(file, headers).stream().map(CSVRecord::toMap).collect(Collectors.toList());
+    List<Map<String, String>> read(MultipartFile file){
+        List<Map<String, String>> records = parseCSVFile(file).stream().map(CSVRecord::toMap).collect(Collectors.toList());
+        if(records.isEmpty())
+            throw CannotReadFileException.emptyRecordList();
+        return records;
     }
 
-    private List<CSVRecord> parseCSVFile(MultipartFile file, String[] headers){
+    private List<CSVRecord> parseCSVFile(MultipartFile file){
         try (Reader reader = new InputStreamReader(new ByteArrayInputStream(file.getBytes()))) {
-            return CSV_FORMAT.withHeader(headers)
-                    .parse(reader).getRecords();
+            return CSV_FORMAT.parse(reader).getRecords();
         } catch (IllegalStateException | IOException e) {
             throw new CannotReadFileException();
         }

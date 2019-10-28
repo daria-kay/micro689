@@ -9,8 +9,8 @@ public class EmailBlackListService extends PartialRecordStorage<EmailBLRecord, E
 
     private final String[] CSV_HEADERS = {"email"};
 
-    public EmailBlackListService(EmailBLRepository emailBLRepository, CSVFileReader csvFileReader) {
-        super(emailBLRepository, EmailBLRecord::new, csvFileReader);
+    public EmailBlackListService(EmailBLRepository emailBLRepository) {
+        super(emailBLRepository, EmailBLRecord::new);
     }
 
     @Override

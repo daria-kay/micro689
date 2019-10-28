@@ -9,8 +9,8 @@ public class InnBlackListService extends PartialRecordStorage<InnBLRecord, InnBL
 
     private final String[] CSV_HEADERS = {"inn"};
 
-    public InnBlackListService(InnBLRepository innBLRepository, CSVFileReader csvFileReader) {
-        super(innBLRepository, InnBLRecord::new, csvFileReader);
+    public InnBlackListService(InnBLRepository innBLRepository) {
+        super(innBLRepository, InnBLRecord::new);
     }
 
     @Override

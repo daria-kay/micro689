@@ -1,64 +1,95 @@
 package com.darakay.micro689.services;
 
+import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
+import com.darakay.micro689.exception.RecordNotFoundException;
+import com.darakay.micro689.mapper.BlackListRecordMapper;
+import com.darakay.micro689.repo.MyBatisRecordRepository;
+import com.darakay.micro689.repo.RecordsRepository;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.schema.Entry;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class BlackListRecordService {
+    private RecordsRepository recordsRepository;
+    private MyBatisRecordRepository myBatisRecordRepository;
+    private Map<String, PartialRecordStorage> services;
+    private CSVFileReader csvFileReader;
 
-    private final Map<String, BLRecordStorage> recordsStorage;
-    private final Map<String, PartialRecordStorage> blackListsServices;
-    private final RecordStorage recordStorage;
+    public BlackListRecordService(RecordsRepository recordsRepository,
+                                  MyBatisRecordRepository myBatisRecordRepository, Map<String, PartialRecordStorage> services,
+                                  CSVFileReader csvFileReader) {
+        this.recordsRepository = recordsRepository;
+        this.myBatisRecordRepository = myBatisRecordRepository;
+        this.services = services;
+        this.csvFileReader = csvFileReader;
 
-    public BlackListRecordService(Map<String, BLRecordStorage> blackListServiceMap,
-                                  Map<String, PartialRecordStorage> blackListsServices,
-                                  RecordStorage recordStorage) {
-        this.recordsStorage = blackListServiceMap;
-        this.blackListsServices = blackListsServices;
-        this.recordStorage = recordStorage;
     }
 
-    public void handleFile(String blType, MultipartFile multipartFile, int creatorId) {
-       getAppropriateRecordStorage(blType).storeRecords(creatorId, multipartFile);    }
-
-
-    public void addEntry(String blType, Map<String, String> request, int creatorId) {
-        getAppropriateRecordStorage(blType).storeRecord(creatorId, request);
+    public void storeRecords(int creatorId, MultipartFile file) {
+        for (Map<String, String> record : csvFileReader.read(file)){
+            storeRecord(creatorId, record);
+        }
     }
 
-    public void updateRecord(String blType, int recordId, Map<String, String> values) {
-        recordStorage.updateRecord(blType, recordId, values);
+    public int storeRecord(int creatorId, Map<String, String> values) {
+        Map<String, Integer> recordValues = new HashMap<>();
+        for(String blockName : services.keySet()){
+            recordValues.put(blockName, services.get(blockName).storeRecord(values));
+        }
+        recordValues.put("creatorId", creatorId);
+        return myBatisRecordRepository.insertMapAsRecord(recordValues);
     }
 
-    public void deleteRecord(int creatorId, int recordId) {
-        recordStorage.deleteRecord(recordId);
+    public FindMatchesResult findMatches(BlackListRecordDTO request){
+        if(request.getPartnerId() != null){
+            boolean matches = myBatisRecordRepository.findMatchesWithPartnerId(request);
+            return FindMatchesResult.gracefull(matches);
+        }
+        return FindMatchesResult.gracefull(myBatisRecordRepository.findMatches(request));
     }
 
     public List<BlackListRecordDTO> getRecords(Pageable pageable) {
-        return recordStorage.getRecords(pageable);
+        return StreamSupport.stream(recordsRepository.findAll(pageable).spliterator(), true)
+                .map(BlackListRecordMapper::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public FindMatchesResult findMatches(BlackListRecordDTO request) {
-       return recordStorage.findMatches(request);
+    public void deleteRecord(int recordId) {
+        recordsRepository.deleteById(recordId);
     }
 
-    private BLRecordStorage getAppropriateRecordStorage(String serviceType) {
-        return Optional.ofNullable(recordsStorage.get(serviceType))
-                .orElseThrow(() -> new BLTypeNotFoundException(serviceType));
+    public void updateRecord(String blockType, int recordId, Map<String, String> values) {
+        Record record = recordsRepository.findById(recordId)
+                .orElseThrow(RecordNotFoundException::new);
+        PartialRecordStorage storage = services.get(blockType);
+        storage.updateRecord(getBlockId(record, blockType), values);
     }
 
-    private PartialRecordStorage getAppropriateBlackListService(String serviceType){
-        return Optional.ofNullable(blackListsServices.get(serviceType))
-                .orElseThrow(() -> new BLTypeNotFoundException(serviceType));
+    private int getBlockId(Record record, String blockType){
+        switch (blockType){
+            case "personal-info":
+                return record.getPersonalInfo().getId();
+            case "passport-info":
+                return record.getPassportInfo().getId();
+            case "inn":
+                return record.getInn().getId();
+            case "phone":
+                return record.getPhone().getId();
+            case "email":
+                return record.getEmail().getId();
+        }
+        throw new BLTypeNotFoundException(blockType);
     }
 }
-
-

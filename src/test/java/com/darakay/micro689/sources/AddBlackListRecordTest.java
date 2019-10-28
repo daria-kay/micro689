@@ -1,6 +1,7 @@
 package com.darakay.micro689.sources;
 
 import com.darakay.micro689.repo.PersonalInfoBLRepository;
+import com.darakay.micro689.repo.RecordsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class AddBlackListRecordTest {
 
-    private static final String URL = "/api/v1/black-list/{list-type}/add-entry-task";
+    private static final String URL = "/api/v1/black-list/add-entry-task";
 
     @Autowired
-    private PersonalInfoBLRepository personalInfoBLRepository;
+    private RecordsRepository recordsRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,10 +45,13 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL, "personal-info")
+        mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(map)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrl("/api/v1/black-list/1"));
+
+        assertThat(recordsRepository.existsById(1)).isTrue();
     }
 
     @Test
@@ -58,7 +62,7 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL, "personal-info")
+        mockMvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -75,7 +79,7 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987/07/14");
 
-        mockMvc.perform(post(URL, "personal-info")
+        mockMvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -91,7 +95,7 @@ public class AddBlackListRecordTest {
         map.put("passportSeria", "123456");
         map.put("passportNumber", "123456");
 
-        mockMvc.perform(post(URL, "passport-info")
+        mockMvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -107,7 +111,7 @@ public class AddBlackListRecordTest {
         map.put("passportNumber", "asdyuo");
         map.put("name", "value");
 
-        mockMvc.perform(post(URL, "passport-info")
+        mockMvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated());

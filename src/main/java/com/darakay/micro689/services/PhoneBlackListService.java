@@ -9,8 +9,8 @@ public class PhoneBlackListService extends PartialRecordStorage<PhoneBLRecord, P
 
     private final String[] CSV_HEADERS = {"phone"};
 
-    public PhoneBlackListService(PhoneBlRepository phoneBlRepository, CSVFileReader csvFileReader) {
-        super(phoneBlRepository, PhoneBLRecord::new, csvFileReader);
+    public PhoneBlackListService(PhoneBlRepository phoneBlRepository) {
+        super(phoneBlRepository, PhoneBLRecord::new);
     }
 
     @Override

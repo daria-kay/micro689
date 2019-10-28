@@ -22,34 +22,31 @@ import java.util.Map;
 @Validated
 public class BlackListResource {
 
-    private final BlackListRecordService mainService;
+    private final BlackListRecordService blackListRecordService;
 
-    public BlackListResource(BlackListRecordService mainService) {
-        this.mainService = mainService;
+    public BlackListResource(BlackListRecordService blackListRecordService) {
+        this.blackListRecordService = blackListRecordService;
     }
 
     @ApiOperation(value = "Загрузка записей черных списков из csv файла",
             notes = "csv файл без заголовков, с ';' в качестве разделителя полей")
-    @PostMapping("/{black-list-type}/upload-task")
-    public ResponseEntity uploadCsvFile(@PathVariable("black-list-type") String blType,
-                                        @RequestParam("csv") MultipartFile multipartFile) {
-
-        mainService.handleFile(blType, multipartFile, 0);
+    @PostMapping("/upload-task")
+    public ResponseEntity uploadCsvFile(@RequestParam("csv") MultipartFile multipartFile) {
+        blackListRecordService.storeRecords(0, multipartFile);
         return ResponseEntity.created(URI.create("")).build();
     }
 
     @ApiOperation("Добавление записи в черный список")
-    @PostMapping("/{black-list-type}/add-entry-task")
-    public ResponseEntity addEntry(@PathVariable("black-list-type") String blType,
-                                   @RequestBody Map<String, String> request){
-        mainService.addEntry(blType, request, 0);
-        return ResponseEntity.created(URI.create("")).build();
+    @PostMapping("/add-entry-task")
+    public ResponseEntity addEntry(@RequestBody Map<String, String> request){
+        int recordId = blackListRecordService.storeRecord(0, request);
+        return ResponseEntity.created(URI.create("/api/v1/black-list/" + recordId)).build();
     }
 
     @ApiOperation("Поиск совпадений в черных списках по переданным полям")
     @PostMapping(value = "/find-matches-task", produces = "application/json")
     public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody BlackListRecordDTO request){
-        return ResponseEntity.ok(mainService.findMatches(request));
+        return ResponseEntity.ok(blackListRecordService.findMatches(request));
     }
 
     @ApiOperation("Редактирование записи черного списка")
@@ -57,14 +54,14 @@ public class BlackListResource {
     public ResponseEntity updateRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId,
                                        @RequestBody Map<String, String> values){
-        mainService.updateRecord(blType,recordId, values);
+        blackListRecordService.updateRecord(blType,recordId, values);
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation("Удаление записи из черного списка")
     @DeleteMapping("/{record-id}")
     public ResponseEntity deleteRecord(@ValidRecordId @PathVariable("record-id") Integer recordId) {
-        mainService.deleteRecord(0, recordId);
+        blackListRecordService.deleteRecord(recordId);
         return ResponseEntity.noContent().build();
     }
 
@@ -73,6 +70,6 @@ public class BlackListResource {
     public ResponseEntity<List<BlackListRecordDTO>> getRecords(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "50") int size) {
-        return ResponseEntity.ok().body(mainService.getRecords(PageRequest.of(page, size)));
+        return ResponseEntity.ok().body(blackListRecordService.getRecords(PageRequest.of(page, size)));
     }
 }
