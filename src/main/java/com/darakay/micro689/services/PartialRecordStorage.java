@@ -59,24 +59,6 @@ public abstract class PartialRecordStorage<BlRecordType extends BlackListRecord,
         repository.save(updated);
     }
 
-    @Transactional
-    public void deleteRecord(int recordId){
-        BlRecordType record = repository.findById(recordId).orElseThrow(RecordNotFoundException::new);
-        repository.delete(record);
-    }
-
-
-    public boolean canHandle(Set<String> fieldNames){
-        Set<String> intersection = Sets.intersection(fieldNames, new HashSet<>(Arrays.asList(getCSVHeaders())));
-        return !intersection.isEmpty();
-    }
-
-    public boolean existRecord(Map<String, String> values){
-        BlRecordType record = blackListRecordMapper.mapToBlackListRecordExample(values);
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues().withIgnorePaths("id");
-        Example<BlRecordType> example = Example.of(record, matcher);
-        return repository.exists(example);
-    }
 
     private Map<String, String> assignRecordTo(int creatorId, Map<String, String> fields){
         fields.put("creatorId", String.valueOf(creatorId));

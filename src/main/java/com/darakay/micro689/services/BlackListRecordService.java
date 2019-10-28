@@ -38,8 +38,8 @@ public class BlackListRecordService {
         getAppropriateBlackListService(blType).updateRecord(recordId, values);
     }
 
-    public void deleteRecord(String blType, int creatorId, int recordId) {
-        getAppropriateBlackListService(blType).deleteRecord(recordId);
+    public void deleteRecord(int creatorId, int recordId) {
+        recordStorage.deleteRecord(recordId);
     }
 
     public List<BlackListRecordDTO> getRecords(Pageable pageable) {

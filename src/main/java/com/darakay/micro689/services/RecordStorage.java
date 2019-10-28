@@ -61,4 +61,8 @@ public class RecordStorage implements BLRecordStorage {
                 .map(BlackListRecordMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
+
+    public void deleteRecord(int recordId) {
+        recordsRepository.deleteById(recordId);
+    }
 }

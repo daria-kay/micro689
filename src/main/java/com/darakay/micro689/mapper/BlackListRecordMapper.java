@@ -6,7 +6,6 @@ import com.darakay.micro689.dto.PassportInfoDTO;
 import com.darakay.micro689.dto.PersonalInfoDTO;
 import com.darakay.micro689.exception.InternalServerException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
-import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
@@ -57,14 +56,6 @@ public class BlackListRecordMapper<BlRecordType> {
         return record;
     }
 
-    public BlRecordType mapToBlackListRecordExample(Map<String, String> fields){
-        BlRecordType record = newBlackListRecord.get();
-        Stream.of(record.getClass().getDeclaredFields())
-                .forEach(field -> checkAndSetValue(fields, field, record,
-                        InvalidRequestFormatException.missingRequiredField(field.getName())));
-        return record;
-    }
-
     public BlRecordType updateRecordFields(Map<String, String> values, BlRecordType record) {
         if (values.isEmpty())
             throw InvalidRecordFormatException.emptyValuesMap();
@@ -76,23 +67,6 @@ public class BlackListRecordMapper<BlRecordType> {
                 .filter(field -> values.containsKey(field.getName()))
                 .forEach(field -> setValue(values.get(field.getName()), field, record));
         return record;
-    }
-
-    private Field getDTOField(String name){
-        try {
-            return BlackListRecordDTO.class.getDeclaredField(name);
-        } catch (NoSuchFieldException e) {
-            throw new InternalServerException();
-        }
-    }
-
-    private String getFiledValue(Field field, Object obj){
-        field.setAccessible(true);
-        try {
-            return field.get(obj).toString();
-        } catch (IllegalAccessException e) {
-            throw new InternalServerException();
-        }
     }
 
     private void checkAndSetValue(Map<String, String> values, Field field,

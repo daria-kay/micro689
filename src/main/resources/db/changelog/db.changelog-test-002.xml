@@ -54,6 +54,10 @@
             <column name="inn_num" value="657895"/>
         </insert>
         <insert tableName="inn_bl">
+            <column name="id" value="343435"/>
+            <column name="inn_num" value="657895"/>
+        </insert>
+        <insert tableName="inn_bl">
             <column name="id" value="1234"/>
             <column name="inn_num" value="657895"/>
         </insert>
@@ -61,8 +65,16 @@
             <column name="id" value="1234"/>
             <column name="phone" value="+78953475143"/>
         </insert>
+        <insert tableName="phone_bl">
+            <column name="id" value="12345"/>
+            <column name="phone" value="+78953475143"/>
+        </insert>
         <insert tableName="email_bl">
             <column name="id" value="1234"/>
+            <column name="email" value="ivan@yandex.ru"/>
+        </insert>
+        <insert tableName="email_bl">
+            <column name="id" value="12345"/>
             <column name="email" value="ivan@yandex.ru"/>
         </insert>
         <insert tableName="record">
@@ -73,6 +85,15 @@
             <column name="inn_id" value="1234"/>
             <column name="phone_id" value="1234"/>
             <column name="email_id" value="1234"/>
+        </insert>
+        <insert tableName="record">
+            <column name="id" value="2"/>
+            <column name="creator_id" value="0"/>
+            <column name="personal_id" value="10002"/>
+            <column name="passport_id" value="1237"/>
+            <column name="inn_id" value="343435"/>
+            <column name="phone_id" value="12345"/>
+            <column name="email_id" value="12345"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

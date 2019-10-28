@@ -1,6 +1,6 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.repo.InnBLRepository;
+import com.darakay.micro689.repo.RecordsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +20,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class DeleteBlackListRecordTest {
-    private final static String URL = "/api/v1/black-list/{black-list-type}/{record-id}";
+    private final static String URL = "/api/v1/black-list/{record-id}";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private InnBLRepository innBLRepository;
+    private RecordsRepository recordsRepository;
 
     @Test
     public void deleteRecord_RecordIdIsValid() throws Exception {
-        mockMvc.perform(delete(URL, "inn", "343434")).andExpect(status().isNoContent());
+        mockMvc.perform(delete(URL, "002")).andExpect(status().isNoContent());
 
-        assertThat(innBLRepository.existsById(343434)).isFalse();
+        assertThat(recordsRepository.existsById(2)).isFalse();
     }
 
     @Test
     public void return404ResponseCode_NonexistentRecord() throws Exception {
-        mockMvc.perform(delete(URL, "inn", "1235")).andExpect(status().isNotFound());
+        mockMvc.perform(delete(URL, "1235")).andExpect(status().is4xxClientError());
+    }
 
-        assertThat(innBLRepository.existsById(1235)).isFalse();
+    @Test
+    public void return400ResponseCode_InvalidRecordId() throws Exception {
+        mockMvc.perform(delete(URL, "a123")).andExpect(status().is4xxClientError());
     }
 }

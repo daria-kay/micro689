@@ -1,5 +1,6 @@
 package com.darakay.micro689.sources;
 
+import com.darakay.micro689.annotation.ValidRecordId;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.services.BlackListRecordService;
@@ -18,6 +19,7 @@ import java.util.Map;
 @Api("Операции с черными списками")
 @RestController
 @RequestMapping("/api/v1/black-list")
+@Validated
 public class BlackListResource {
 
     private final BlackListRecordService mainService;
@@ -60,10 +62,9 @@ public class BlackListResource {
     }
 
     @ApiOperation("Удаление записи из черного списка")
-    @DeleteMapping("/{black-list-type}/{record-id}")
-    public ResponseEntity deleteRecord(@PathVariable("black-list-type") String blType,
-                                       @PathVariable("record-id") int recordId) {
-        mainService.deleteRecord(blType, 0, recordId);
+    @DeleteMapping("/{record-id}")
+    public ResponseEntity deleteRecord(@ValidRecordId @PathVariable("record-id") Integer recordId) {
+        mainService.deleteRecord(0, recordId);
         return ResponseEntity.noContent().build();
     }
 
