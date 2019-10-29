@@ -1,17 +1,11 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.repo.PersonalInfoBLRepository;
 import com.darakay.micro689.repo.RecordsRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +14,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-public class AddBlackListRecordTest {
+public class AddBlackListRecordTest extends AbstractTest{
 
     private static final String URL = "/api/v1/black-list/add-entry-task";
 
@@ -45,7 +35,8 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated())
@@ -62,7 +53,8 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -79,7 +71,8 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987/07/14");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -95,7 +88,8 @@ public class AddBlackListRecordTest {
         map.put("passportSeria", "123456");
         map.put("passportNumber", "123456");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
@@ -111,7 +105,8 @@ public class AddBlackListRecordTest {
         map.put("passportNumber", "asdyuo");
         map.put("name", "value");
 
-        mockMvc.perform(post(URL)
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isCreated());
@@ -126,8 +121,53 @@ public class AddBlackListRecordTest {
         map.put("secondName", "Иванович");
         map.put("birthDate", "1987-07-14");
 
-        mockMvc.perform(post(URL, "full-filled")
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isUnsupportedMediaType());
+    }
+
+    @Test
+    public void return403Response_WhenNoAuthenticationHeader() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("surname", "Иванов");
+        map.put("firstName", "Иван");
+        map.put("secondName", "Иванович");
+        map.put("birthDate", "1987-07-14");
+
+        mockMvc.perform(post(URL)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void return401Response_WhenPasswordIsInvalid() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("surname", "Иванов");
+        map.put("firstName", "Иван");
+        map.put("secondName", "Иванович");
+        map.put("birthDate", "1987-07-14");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "invalid")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void return401Response_WhenLoginIsInvalid() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("surname", "Иванов");
+        map.put("firstName", "Иван");
+        map.put("secondName", "Иванович");
+        map.put("birthDate", "1987-07-14");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "invalid", "test_pw")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isUnauthorized());
     }
 }

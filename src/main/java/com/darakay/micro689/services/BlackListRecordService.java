@@ -1,6 +1,7 @@
 package com.darakay.micro689.services;
 
 import com.darakay.micro689.domain.Record;
+import com.darakay.micro689.domain.User;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
@@ -9,6 +10,8 @@ import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.MyBatisRecordRepository;
 import com.darakay.micro689.repo.RecordsRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class BlackListRecordService {
@@ -35,13 +37,19 @@ public class BlackListRecordService {
 
     }
 
-    public void storeRecords(int creatorId, MultipartFile file) {
+    public void storeRecords(Authentication auth, MultipartFile file) {
+        User creator = ((User)auth.getPrincipal());
         for (Map<String, String> record : csvFileReader.read(file)){
-            storeRecord(creatorId, record);
+            storeRecord(creator.getId(), record);
         }
     }
 
-    public int storeRecord(int creatorId, Map<String, String> values) {
+    public int storeRecord(Authentication auth, Map<String, String> values) {
+        User creator = ((User)auth.getPrincipal());
+        return storeRecord(creator.getId(), values);
+    }
+
+    private int storeRecord(int creatorId, Map<String, String> values){
         Map<String, Integer> recordValues = new HashMap<>();
         for(String blockName : services.keySet()){
             recordValues.put(blockName, services.get(blockName).storeRecord(values));
@@ -58,16 +66,19 @@ public class BlackListRecordService {
         return FindMatchesResult.gracefull(myBatisRecordRepository.findMatches(request));
     }
 
-    public List<BlackListRecordDTO> getRecords(Pageable pageable) {
-        return StreamSupport.stream(recordsRepository.findAll(pageable).spliterator(), true)
+    public List<BlackListRecordDTO> getRecords(Authentication auth, Pageable pageable) {
+        User creator = ((User)auth.getPrincipal());
+        return recordsRepository.findByCreator(creator, pageable).parallelStream()
                 .map(BlackListRecordMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize(value = "@recordAccessEvaluator.recordBelongsToUser(principal.id, #recordId)")
     public void deleteRecord(int recordId) {
         recordsRepository.deleteById(recordId);
     }
 
+    @PreAuthorize(value = "@recordAccessEvaluator.recordBelongsToUser(principal.id, #recordId)")
     public void updateRecord(String blockType, int recordId, Map<String, String> values) {
         Record record = recordsRepository.findById(recordId)
                 .orElseThrow(RecordNotFoundException::new);
@@ -89,5 +100,10 @@ public class BlackListRecordService {
                 return record.getEmail().getId();
         }
         throw new BLTypeNotFoundException(blockType);
+    }
+
+    public boolean recordsBelongToUser(int userId, int recordId) {
+        Record record = recordsRepository.findById(recordId).orElseThrow(RecordNotFoundException::new);
+        return record.getCreator().getId() == userId;
     }
 }

@@ -4,31 +4,20 @@ import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.repo.PassportInfoBLRepository;
 import com.darakay.micro689.repo.RecordsRepository;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+public class UpdateBlackListRecordTest extends AbstractTest{
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-public class UpdateBlackListRecordTest {
-
-    private final static String URL = "/api/v1/black-list/{black-list-type}/{record-id}";
+    private final static String URL = "/api/v1/black-list/";
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -47,12 +36,26 @@ public class UpdateBlackListRecordTest {
         testMap.put("passportNumber", "907645");
 
         mockMvc.perform(
-                    put(URL, "passport-info", "1")
+                    authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isOk());
-        Record record = recordsRepository.findById(1).get();
+        Record record = recordsRepository.findById(10001).get();
         assertThat(record.getPassportInfo().getPassportNumber()).isEqualTo("907645");
+    }
+
+    @Test
+    public void shouldReturn403_RecordDoesNotBelongUser() throws Exception {
+        HashMap<String, String> testMap = new HashMap<>();
+        testMap.put("phone", "+78965388637");
+
+        mockMvc.perform(
+                authenticatePutRequest(URL+"passport-info/10005", "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(testMap)))
+                .andExpect(status().isForbidden());
+        Record record = recordsRepository.findById(10005).get();
+        assertThat(record.getPhone().getPhone()).isEqualTo("+78953475143");
     }
 
     @Test
@@ -61,7 +64,7 @@ public class UpdateBlackListRecordTest {
         testMap.put("surname", "Иванов");
 
         mockMvc.perform(
-                put(URL, "passport-info", "1")
+                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -76,7 +79,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "1")
+                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -93,7 +96,7 @@ public class UpdateBlackListRecordTest {
         testMap.put("creatorId", "0");
 
         mockMvc.perform(
-                put(URL, "passport-info", "1")
+                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().is4xxClientError())
@@ -106,7 +109,7 @@ public class UpdateBlackListRecordTest {
     @Test
     public void shouldReturn400ResponseCode_EmptyRequestBody() throws Exception {
         mockMvc.perform(
-                put(URL, "passport-info", "1")
+                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
 
@@ -118,7 +121,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "1")
+                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isUnsupportedMediaType());
@@ -131,7 +134,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "678")
+                authenticatePutRequest(URL+"passport-info/678", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isNotFound());
@@ -142,7 +145,7 @@ public class UpdateBlackListRecordTest {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
-                put(URL, "passport-info", "ab678")
+                authenticatePutRequest(URL+"passport-info/vg45", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isNotFound());

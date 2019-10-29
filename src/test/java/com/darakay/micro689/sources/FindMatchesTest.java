@@ -3,6 +3,7 @@ package com.darakay.micro689.sources;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.PassportInfoDTO;
 import com.darakay.micro689.dto.PersonalInfoDTO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.shaded.com.fasterxml.jackson.annotation.JsonInclude;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.text.SimpleDateFormat;
@@ -33,9 +35,14 @@ public class FindMatchesTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     private String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+    @Before
+    public void setUp(){
+
+    }
 
     @Test
     public void findRecord_SearchesPartiallyRecordsWithPartnerId_WhenMatchesExist() throws Exception {

@@ -4,14 +4,9 @@ import com.darakay.micro689.repo.*;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Locale;
@@ -22,10 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")public class UploadCSVFileTest {
+public class UploadCSVFileTest extends AbstractTest {
 
     private static final String UPLOAD_URL = "/api/v1/black-list/upload-task";
 
@@ -53,8 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToFullFilledBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForFullFilledBL(10))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForFullFilledBL(10))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
@@ -63,8 +56,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToPersonalInfoBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForPersonalInfoBL(5))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForPersonalInfoBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
@@ -73,8 +67,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToPassportInfoBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForPassportInfoBL(5))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForPassportInfoBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
@@ -83,8 +78,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToInnBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForInnBL(5))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForInnBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
@@ -93,8 +89,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToPhoneBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForPhoneBL(5))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForPhoneBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
@@ -103,8 +100,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void shouldUploadCsvFile_ToEmailBlackList() throws Exception {
-        mockMvc.perform(multipart(UPLOAD_URL)
-                .file(getFakeCsvContentForEmailBL(5))
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", getFakeCsvContentForEmailBL(5))
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
         assertThat(emailBLRepository.findByEmail("test.mail@mail.com")).hasSize(5);
@@ -113,8 +111,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     public void shouldReturn_400Response_ForInvalidFileFormat_MissingRequiredColumn() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL)
-                        .file(new MockMultipartFile("csv", ("surname;firstName;birthDate\n" +
+                authenticateMultipartRequest(UPLOAD_URL, "test_user", "test_pw",
+                        new MockMultipartFile("csv", ("surname;firstName;birthDate\n" +
                                 "Суриков;Иван;1987/07/07").getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
@@ -125,8 +123,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     public void shouldReturn_400Response_ForInvalidFileFormat_WrongDataFormat() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL)
-                        .file(new MockMultipartFile("csv", ("surname;firstName;secondName;birthDate\n" +
+                authenticateMultipartRequest(UPLOAD_URL, "test_user", "test_pw",
+                        new MockMultipartFile("csv", ("surname;firstName;secondName;birthDate\n" +
                                 "Суриков;Иван;Иванович;1987/07/07").getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
@@ -139,19 +137,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     }
 
     @Test
-    public void shouldReturn_400Response_ForMissingRequestParam() throws Exception {
-        mockMvc.perform(
-                multipart(UPLOAD_URL)
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
     public void shouldReturn_400Response_ForInvalidContentType() throws Exception {
         mockMvc.perform(
-                multipart(UPLOAD_URL)
-                        .file(new MockMultipartFile("csv", "content".getBytes()))
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", new MockMultipartFile("csv", "content".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
 
@@ -162,8 +151,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         byte[] content = new byte[10_000_000];
         new Random().nextBytes(content);
         mockMvc.perform(
-                multipart(UPLOAD_URL)
-                        .file(new MockMultipartFile("csv", content))
+                authenticateMultipartRequest(UPLOAD_URL, "test_user",
+                        "test_pw", new MockMultipartFile("csv", content))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().is4xxClientError());
 

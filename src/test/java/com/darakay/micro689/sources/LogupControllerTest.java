@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @EnableAspectJAutoProxy
-public class LoginControllerTest {
+public class LogupControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

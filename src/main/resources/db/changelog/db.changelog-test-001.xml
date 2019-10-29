@@ -23,5 +23,12 @@
             <column name="partner_id" value="0"/>
             <column name="block_flag" value="false"/>
         </insert>
+        <insert tableName="user">
+            <column name="id" value="100003"/>
+            <column name="login" value="test_user2"/>
+            <column name="pw" value="test_pw2"/>
+            <column name="partner_id" value="0"/>
+            <column name="block_flag" value="false"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
