@@ -18,10 +18,6 @@ public class ValidationAspect {
         this.logUpRequestValidator = logUpRequestValidator;
     }
 
-    @Pointcut("@annotation(com.darakay.micro689.annotation.ValidUserLogin)")
-    public void validUserName(){
-    }
-
     @Pointcut("execution(* com.darakay.micro689.sources.LoginController.logUp(com.darakay.micro689.dto.LogupRequest))")
     public void validatedLogUpRequest(){
 

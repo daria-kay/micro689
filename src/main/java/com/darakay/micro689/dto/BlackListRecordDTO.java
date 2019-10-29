@@ -16,7 +16,7 @@ public class BlackListRecordDTO {
     private Integer partnerId;
 
     @JsonProperty("id")
-    private int id;
+    private Integer id;
 
     @JsonProperty("personalInfo")
     private PersonalInfoDTO personalInfo;

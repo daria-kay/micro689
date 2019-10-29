@@ -12,6 +12,8 @@ spring:
     username: micro689_usr
     password: pass
     driver-class-name: org.postgresql.Driver
+mybatis:
+  config-location: classpath:mybatis/config.xml
 ---
 spring:
   profiles: prod
@@ -28,6 +30,8 @@ spring:
     username: ${DB_USR}
     password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
+mybatis:
+  config-location: classpath:mybatis/config.xml
 ---
 spring:
   profiles: test
