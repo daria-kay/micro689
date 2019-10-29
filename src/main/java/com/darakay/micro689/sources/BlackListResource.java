@@ -2,6 +2,7 @@ package com.darakay.micro689.sources;
 
 import com.darakay.micro689.annotation.ValidRecordId;
 import com.darakay.micro689.dto.BlackListRecordDTO;
+import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.services.BlackListRecordService;
 import io.swagger.annotations.Api;
@@ -50,7 +51,7 @@ public class BlackListResource {
 
     @ApiOperation("Поиск совпадений в черных списках по переданным полям")
     @PostMapping(value = "/find-matches-task", produces = "application/json")
-    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody BlackListRecordDTO request){
+    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody FindMatchesRequest request){
         return ResponseEntity.ok(blackListRecordService.findMatches(request));
     }
 

@@ -23,8 +23,6 @@ public class PassportInfoDTO {
 
     @JsonCreator
     public PassportInfoDTO(String passportSeria, String passportNumber) {
-        if(passportNumber == null || passportSeria == null)
-            throw InvalidRequestFormatException.missingRequiredField("passportInfo");
         this.passportSeria = passportSeria;
         this.passportNumber = passportNumber;
     }

@@ -1,6 +1,8 @@
 package com.darakay.micro689.aspect;
 
+import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.LogupRequest;
+import com.darakay.micro689.validation.FindMatchesRequestValidator;
 import com.darakay.micro689.validation.LogUpRequestValidator;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,9 +15,11 @@ import org.springframework.stereotype.Component;
 public class ValidationAspect {
 
     private final LogUpRequestValidator logUpRequestValidator;
+    private final FindMatchesRequestValidator findMatchesRequestValidator;
 
-    public ValidationAspect(LogUpRequestValidator logUpRequestValidator) {
+    public ValidationAspect(LogUpRequestValidator logUpRequestValidator, FindMatchesRequestValidator findMatchesRequestValidator) {
         this.logUpRequestValidator = logUpRequestValidator;
+        this.findMatchesRequestValidator = findMatchesRequestValidator;
     }
 
     @Pointcut("execution(* com.darakay.micro689.sources.LoginController.logUp(com.darakay.micro689.dto.LogupRequest))")
@@ -23,10 +27,21 @@ public class ValidationAspect {
 
     }
 
+    @Pointcut("execution(* com.darakay.micro689.sources.BlackListResource.findRecords(com.darakay.micro689.dto.FindMatchesRequest))")
+    public void validatedFindMatchesRequest(){
+
+    }
+
     @Before("validatedLogUpRequest()")
     public void validateUserName(JoinPoint joinPoint){
         LogupRequest request = (LogupRequest)joinPoint.getArgs()[0];
         logUpRequestValidator.validate(request);
+    }
+
+    @Before("validatedFindMatchesRequest()")
+    public void validateFindMatchesRequest(JoinPoint joinPoint){
+        FindMatchesRequest request = (FindMatchesRequest)joinPoint.getArgs()[0];
+        findMatchesRequestValidator.validate(request);
     }
 
 }

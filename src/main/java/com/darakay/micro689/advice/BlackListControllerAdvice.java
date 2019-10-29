@@ -1,11 +1,13 @@
 package com.darakay.micro689.advice;
 
 import com.darakay.micro689.dto.ErrorMessageDTO;
+import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.InvalidLogUpRequestException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
 import com.darakay.micro689.exception.InvalidRequestFormatException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -43,5 +45,10 @@ public class BlackListControllerAdvice {
     @ExceptionHandler(InvalidLogUpRequestException.class)
     public ResponseEntity handleInvalidLogUpRequestException(InvalidLogUpRequestException ex){
         return ResponseEntity.badRequest().body(new ErrorMessageDTO(ex.getMessage()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException ex){
+        return ResponseEntity.ok(FindMatchesResult.error("Некорректный формат запроса"));
     }
 }

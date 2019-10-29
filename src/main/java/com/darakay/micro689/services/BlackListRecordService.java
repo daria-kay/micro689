@@ -3,6 +3,7 @@ package com.darakay.micro689.services;
 import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.domain.User;
 import com.darakay.micro689.dto.BlackListRecordDTO;
+import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
 import com.darakay.micro689.exception.RecordNotFoundException;
@@ -58,12 +59,13 @@ public class BlackListRecordService {
         return myBatisRecordRepository.insertMapAsRecord(recordValues);
     }
 
-    public FindMatchesResult findMatches(BlackListRecordDTO request){
+    public FindMatchesResult findMatches(FindMatchesRequest request){
         if(request.getPartnerId() != null){
-            boolean matches = myBatisRecordRepository.findMatchesWithPartnerId(request);
+            boolean matches = myBatisRecordRepository
+                    .findMatchesWithPartnerId(request.getPartnerId(), request.getExample());
             return FindMatchesResult.gracefull(matches);
         }
-        return FindMatchesResult.gracefull(myBatisRecordRepository.findMatches(request));
+        return FindMatchesResult.gracefull(myBatisRecordRepository.findMatches(request.getExample()));
     }
 
     public List<BlackListRecordDTO> getRecords(Authentication auth, Pageable pageable) {

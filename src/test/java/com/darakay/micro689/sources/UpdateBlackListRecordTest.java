@@ -107,16 +107,6 @@ public class UpdateBlackListRecordTest extends AbstractTest{
     }
 
     @Test
-    public void shouldReturn400ResponseCode_EmptyRequestBody() throws Exception {
-        mockMvc.perform(
-                authenticatePutRequest(URL+"passport-info/10001", "test_user", "test_pw")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().is4xxClientError());
-
-        assertThat(passportInfoBLRepository.existsById(1234)).isTrue();
-    }
-
-    @Test
     public void shouldReturn415ResponseCode_UnsupportedMediaType() throws Exception {
         HashMap<String, String> testMap = new HashMap<>();
 

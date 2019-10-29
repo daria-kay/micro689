@@ -1,8 +1,7 @@
 package com.darakay.micro689.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.darakay.micro689.exception.InvalidRequestFormatException;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,10 +10,6 @@ import lombok.Getter;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlackListRecordDTO {
-
-    @JsonProperty("partnerId")
-    private Integer partnerId;
-
     @JsonProperty("id")
     private Integer id;
 
@@ -32,4 +27,9 @@ public class BlackListRecordDTO {
 
     @JsonProperty("email")
     private String email;
+
+    @JsonAnySetter
+    public void handleUnknown(String key, Object value){
+        throw InvalidRequestFormatException.invalidFormat();
+    }
 }

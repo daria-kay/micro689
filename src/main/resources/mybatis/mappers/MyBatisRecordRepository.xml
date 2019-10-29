@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.darakay.micro689.repo.MyBatisRecordRepository">
-    <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="com.darakay.micro689.dto.BlackListRecordDTO">
+    <select id="findMatchesWithPartnerId"  resultType="boolean" parameterType="map">
         SELECT EXISTS (SELECT * FROM record
         JOIN (
         SELECT "user".id as creator, partner.id as partner FROM "user" JOIN partner ON "user".partner_id = partner.id)
@@ -12,21 +12,21 @@
         JOIN phone_bl pb on record.phone_id = pb.id
         JOIN email_bl eb on record.email_id = eb.id
         WHERE partner = #{partnerId} AND ( 1=0
-        <if test="personalInfo != null">
-            OR surname = #{personalInfo.surname} AND first_name = #{personalInfo.firstName} AND
-            second_name = #{personalInfo.secondName} AND birth_date = #{personalInfo.birthDate}
+        <if test="example.personalInfo != null">
+            OR surname = #{example.personalInfo.surname} AND first_name = #{example.personalInfo.firstName} AND
+            second_name = #{example.personalInfo.secondName} AND birth_date = #{example.personalInfo.birthDate}
         </if>
-        <if test="passportInfo != null">
-            OR pass_ser = #{passportInfo.passportSeria} AND pass_num = #{passportInfo.passportNumber}
+        <if test="example.passportInfo != null">
+            OR pass_ser = #{example.passportInfo.passportSeria} AND pass_num = #{example.passportInfo.passportNumber}
         </if>
-        <if test="inn != null">
-            OR inn_num = #{inn}
+        <if test="example.inn != null">
+            OR inn_num = #{example.inn}
         </if>
-        <if test="phone != null">
-            OR phone = #{phone}
+        <if test="example.phone != null">
+            OR phone = #{example.phone}
         </if>
-        <if test="email != null">
-            OR email = #{email}
+        <if test="example.email != null">
+            OR email = #{example.email}
         </if>
         )
      )

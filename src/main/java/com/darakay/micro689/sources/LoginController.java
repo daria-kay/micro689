@@ -24,6 +24,6 @@ public class LoginController {
     @PostMapping("/logup")
     public ResponseEntity logUp(@RequestBody LogupRequest request){
         int userId = userService.logUp(request);
-        return ResponseEntity.ok(URI.create("api/v1/user/"+ userId));
+        return ResponseEntity.ok().build();
     }
 }

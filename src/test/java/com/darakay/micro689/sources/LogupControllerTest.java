@@ -40,8 +40,7 @@ public class LogupControllerTest {
         mockMvc.perform(post("/api/v1/logup")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(mapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(redirectedUrl("api/v1/user/1"));
+                .andExpect(status().isOk());
 
         assertThat(userRepository.existsById(1)).isTrue();
     }

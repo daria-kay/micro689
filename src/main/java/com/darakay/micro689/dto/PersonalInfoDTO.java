@@ -27,8 +27,6 @@ public class PersonalInfoDTO {
 
     @JsonCreator
     public PersonalInfoDTO(String surname, String firstName, String secondName, Date birthDate) {
-        if(surname == null || firstName == null || secondName == null || birthDate == null)
-            throw InvalidRequestFormatException.missingRequiredField("personalInfo");
         this.surname = surname;
         this.firstName = firstName;
         this.secondName = secondName;

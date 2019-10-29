@@ -6,6 +6,10 @@ public class InvalidRequestFormatException extends RuntimeException {
     }
 
     public static InvalidRequestFormatException missingRequiredField(String fieldName) {
-        return new InvalidRequestFormatException("Не заполнено обязательное поле '" + fieldName + "'");
+        return new InvalidRequestFormatException("Не заполнено обязательное поле в '" + fieldName + "'");
+    }
+
+    public static InvalidRequestFormatException invalidFormat() {
+        return new InvalidRequestFormatException("Некорректный формат запроса");
     }
 }
