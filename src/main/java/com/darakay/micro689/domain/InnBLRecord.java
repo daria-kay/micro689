@@ -19,7 +19,7 @@ public class InnBLRecord implements BlackListRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Size(max = 6, min = 6, message = "Номер ИНН может содержать только 6 знаков")
+    @Size(max = 10, min = 6, message = "Номер не ИНН может содержать больше 10 знаков")
     @Column(name = "inn_num")
     private String inn;
 }
