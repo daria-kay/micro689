@@ -8,6 +8,7 @@ import com.darakay.micro689.services.BlackListRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.http.MediaType.*;
 
 @Api("Операции с черными списками")
 @RestController
@@ -47,7 +50,7 @@ public class BlackListResource {
     }
 
     @ApiOperation("Поиск совпадений в черных списках по переданным полям")
-    @PostMapping(value = "/find-matches-task", produces = "application/json")
+    @PostMapping(value = "/find-matches-task", produces = "application/json;charset=UTF-8")
     public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody FindMatchesRequest request){
         return ResponseEntity.ok(blackListRecordService.findMatches(request));
     }

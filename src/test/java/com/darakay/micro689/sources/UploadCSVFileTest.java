@@ -4,9 +4,12 @@ import com.darakay.micro689.repo.*;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Locale;
@@ -17,6 +20,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class UploadCSVFileTest extends AbstractTest {
 
     private static final String UPLOAD_URL = "/api/v1/black-list/upload-task";

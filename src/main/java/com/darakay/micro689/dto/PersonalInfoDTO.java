@@ -5,12 +5,16 @@ import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
 @JsonAutoDetect
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PersonalInfoDTO {
 
     @JsonProperty("surname")
@@ -24,14 +28,6 @@ public class PersonalInfoDTO {
 
     @JsonProperty("birthDate")
     private Date birthDate;
-
-    @JsonCreator
-    public PersonalInfoDTO(String surname, String firstName, String secondName, Date birthDate) {
-        this.surname = surname;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.birthDate = birthDate;
-    }
 
     public PersonalInfoDTO(PersonalInfoBLRecord record){
         this.surname = record.getSurname();

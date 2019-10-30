@@ -5,14 +5,16 @@ import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 
 
 @JsonAutoDetect
-@Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PassportInfoDTO {
 
     @JsonProperty("passportSeria")
@@ -20,12 +22,6 @@ public class PassportInfoDTO {
 
     @JsonProperty("passportNumber")
     private String passportNumber;
-
-    @JsonCreator
-    public PassportInfoDTO(String passportSeria, String passportNumber) {
-        this.passportSeria = passportSeria;
-        this.passportNumber = passportNumber;
-    }
 
     public PassportInfoDTO(PassportInfoBLRecord record) {
         this.passportSeria = record.getPassportSeria();

@@ -1,5 +1,6 @@
 package com.darakay.micro689.config;
 
+import com.darakay.micro689.security.AuthProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,8 +40,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
-                .and()
-                .httpBasic();
+                .and().httpBasic();
     }
 
     private CorsConfigurationSource corsConfigurationSource(){
