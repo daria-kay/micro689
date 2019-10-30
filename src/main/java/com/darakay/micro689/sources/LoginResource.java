@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/api/v1/")
-public class LoginController {
+public class LoginResource {
 
     private final UserService userService;
 
-    public LoginController(UserService userService) {
+    public LoginResource(UserService userService) {
         this.userService = userService;
     }
 

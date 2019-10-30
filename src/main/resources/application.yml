@@ -1,3 +1,7 @@
+frontend:
+  host: localhost
+authentication:
+  header-name: XXX-Authentication
 spring:
   jpa:
     properties:
@@ -30,6 +34,10 @@ spring:
     username: ${DB_USR}
     password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
+frontend:
+  host: ${FRONTEND_URL}
+authentication:
+  header-name: XXX-Authentication
 mybatis:
   config-location: classpath:mybatis/config.xml
 ---
@@ -49,6 +57,10 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: postgres
     password:
+frontend:
+  host: localhost
+authentication:
+  header-name: XXX-Authentication
 mybatis:
   config-location: classpath:mybatis/config.xml
 

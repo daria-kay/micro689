@@ -10,20 +10,17 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
 @Api("Операции с черными списками")
 @RestController
 @RequestMapping("/api/v1/black-list")
-@Validated
 public class BlackListResource {
 
     private final BlackListRecordService blackListRecordService;
