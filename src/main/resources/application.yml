@@ -30,9 +30,9 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
-    username: ${DB_USR}
-    password: ${DB_PASS}
+    url: jdbc:postgresql://database:5432/micro
+    username: usr
+    password: pass
     driver-class-name: org.postgresql.Driver
 frontend:
   host: ${FRONTEND_URL}

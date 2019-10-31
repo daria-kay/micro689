@@ -1,7 +1,11 @@
 package com.darakay.micro689.dto;
 
+import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.exception.InvalidRequestFormatException;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,5 +39,17 @@ public class BlackListRecordDTO {
     @JsonAnySetter
     public void handleUnknown(String key, Object value){
         throw InvalidRequestFormatException.invalidFormat();
+    }
+
+    public BlackListRecordDTO(Record record){
+        this.personalInfo = new PersonalInfoDTO(record.getPersonalInfo());
+        this.passportInfo = new PassportInfoDTO(record.getPassportInfo());
+        if(record.getEmail() != null)
+            this.email = record.getEmail().getEmail();
+        if(record.getInn() != null)
+            this.inn = record.getInn().getInn();
+        if(record.getPhone() != null)
+            this.email = record.getPhone().getPhone();
+        this.id = record.getId();
     }
 }

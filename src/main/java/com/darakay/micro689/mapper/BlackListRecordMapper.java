@@ -1,12 +1,7 @@
 package com.darakay.micro689.mapper;
 
-import com.darakay.micro689.domain.Record;
-import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.PassportInfoDTO;
-import com.darakay.micro689.dto.PersonalInfoDTO;
 import com.darakay.micro689.exception.InternalServerException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Field;
@@ -25,17 +20,6 @@ public class BlackListRecordMapper<BlRecordType> {
     private BlackListRecordMapper(Supplier<BlRecordType> newBlackListRecord, Set<String> fieldNames) {
         this.newBlackListRecord = newBlackListRecord;
         this.requiredFields = fieldNames;
-    }
-
-    public static BlackListRecordDTO mapToDTO(Record record){
-        return BlackListRecordDTO.builder()
-                .id(record.getId())
-                .personalInfo(new PersonalInfoDTO(record.getPersonalInfo()))
-                .passportInfo(new PassportInfoDTO(record.getPassportInfo()))
-                .inn(record.getInn().getInn())
-                .phone(record.getPhone().getPhone())
-                .email(record.getEmail().getEmail())
-                .build();
     }
 
     public static <BlackListRecordType> BlackListRecordMapper<BlackListRecordType> forRecord(

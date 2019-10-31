@@ -1,9 +1,8 @@
 package com.darakay.micro689.dto;
 
 import com.darakay.micro689.domain.PersonalInfoBLRecord;
-import com.darakay.micro689.exception.InvalidRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +14,7 @@ import java.sql.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PersonalInfoDTO {
 
     @JsonProperty("surname")
@@ -29,10 +29,12 @@ public class PersonalInfoDTO {
     @JsonProperty("birthDate")
     private Date birthDate;
 
-    public PersonalInfoDTO(PersonalInfoBLRecord record){
-        this.surname = record.getSurname();
-        this.firstName = record.getFirstName();
-        this.secondName = record.getSecondName();
-        this.birthDate = record.getBirthDate();
+    PersonalInfoDTO(PersonalInfoBLRecord record){
+        if(record != null) {
+            this.surname = record.getSurname();
+            this.firstName = record.getFirstName();
+            this.secondName = record.getSecondName();
+            this.birthDate = record.getBirthDate();
+        }
     }
 }

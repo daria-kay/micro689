@@ -7,7 +7,6 @@ import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
 import com.darakay.micro689.exception.RecordNotFoundException;
-import com.darakay.micro689.mapper.BlackListRecordMapper;
 import com.darakay.micro689.repo.MyBatisRecordRepository;
 import com.darakay.micro689.repo.RecordsRepository;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +70,7 @@ public class BlackListRecordService {
     public List<BlackListRecordDTO> getRecords(Authentication auth, Pageable pageable) {
         User creator = ((User)auth.getPrincipal());
         return recordsRepository.findByCreator(creator, pageable).parallelStream()
-                .map(BlackListRecordMapper::mapToDTO)
+                .map(BlackListRecordDTO::new)
                 .collect(Collectors.toList());
     }
 

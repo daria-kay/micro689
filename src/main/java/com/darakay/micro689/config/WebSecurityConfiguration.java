@@ -1,6 +1,5 @@
 package com.darakay.micro689.config;
 
-import com.darakay.micro689.security.AuthProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

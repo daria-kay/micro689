@@ -1,7 +1,6 @@
 package com.darakay.micro689.advice;
 
 import com.darakay.micro689.dto.ErrorMessageDTO;
-import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.InvalidLogUpRequestException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
