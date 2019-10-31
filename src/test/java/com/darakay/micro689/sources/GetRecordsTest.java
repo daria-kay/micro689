@@ -1,6 +1,5 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

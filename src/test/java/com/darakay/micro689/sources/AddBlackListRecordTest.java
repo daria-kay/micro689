@@ -133,7 +133,7 @@ public class AddBlackListRecordTest extends AbstractTest{
     }
 
     @Test
-    public void return403Response_WhenNoAuthenticationHeader() throws Exception {
+    public void return401Response_WhenNoAuthenticationHeader() throws Exception {
         Map<String, String> map = new HashMap<>();
         map.put("surname", "Иванов");
         map.put("firstName", "Иван");

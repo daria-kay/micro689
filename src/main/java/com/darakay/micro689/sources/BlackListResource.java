@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/black-list")
+@CrossOrigin("*")
 public class BlackListResource {
 
     private final BlackListRecordService blackListRecordService;
