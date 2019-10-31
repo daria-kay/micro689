@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -34,6 +35,12 @@ public class GetRecordsTest extends AbstractTest{
                 .andExpect(status().isOk())
                 .andReturn();
         assertThat(result.getResponse().getContentAsString()).isNotEqualTo("[]");
+    }
+
+    @Test
+    public void shouldReturn401_ThenUserIsUnauthorized() throws Exception {
+        mockMvc.perform(get(URL))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

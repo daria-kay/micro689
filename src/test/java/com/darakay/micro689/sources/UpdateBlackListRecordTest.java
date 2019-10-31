@@ -15,6 +15,8 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -144,5 +146,16 @@ public class UpdateBlackListRecordTest extends AbstractTest{
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturn401ResponseCode() throws Exception {
+        HashMap<String, String> testMap = new HashMap<>();
+
+        mockMvc.perform(
+                put(URL+"passport-info/10001")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(testMap)))
+                .andExpect(status().isUnauthorized());
     }
 }

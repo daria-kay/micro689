@@ -33,7 +33,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/v1/logup", "/api/v1/black-list/find-matches-task")
                 .permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/api/v1/black-list/*").authenticated()
+                .authorizeRequests().antMatchers("/api/v1/black-list", "/api/v1/black-list/*","/api/v1/black-list/*/*" ).authenticated()
                 .and()
                 .addFilterAfter(filter(), RequestHeaderAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
