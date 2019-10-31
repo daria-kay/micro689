@@ -62,5 +62,4 @@ public class GetRecordsTest extends AbstractTest{
                 "[{\"id\":10006,\"personalInfo\":{},\"passportInfo\":{},\"email\":\"+78953475143\"}]"
         );
     }
-
 }
