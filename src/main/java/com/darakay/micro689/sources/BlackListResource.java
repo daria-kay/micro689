@@ -16,9 +16,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 @RestController
 @RequestMapping("/api/v1/black-list")
-@CrossOrigin("*")
+@CrossOrigin(value = "*", methods = {OPTIONS, GET, POST, PUT})
 public class BlackListResource {
 
     private final BlackListRecordService blackListRecordService;
