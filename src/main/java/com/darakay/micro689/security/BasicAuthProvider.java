@@ -27,10 +27,12 @@ public class BasicAuthProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException("Несуществующий логин"));
-        if(user.getPassword().equals(password)){
+        if(user.getPassword().equals(password) && !user.isBlock()){
             return new UsernamePasswordAuthenticationToken(user, authentication.getCredentials(),
                     ImmutableSet.of(new SimpleGrantedAuthority("USER")));
         }
+        if(user.isBlock())
+            throw new BadCredentialsException("Пользователь заблокирован");
         throw new BadCredentialsException("Неверный пароль");
     }
 

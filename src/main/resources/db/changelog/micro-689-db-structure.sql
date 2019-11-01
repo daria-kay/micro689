@@ -2,7 +2,7 @@ CREATE TABLE "user"
 (
     "id"    serial      NOT NULL,
     "login"      varchar(20) NOT NULL UNIQUE,
-    "pw"         varchar(20) NOT NULL,
+    "pw"         varchar(40) NOT NULL,
     "partner_id" integer     NOT NULL,
     "block_flag" BOOLEAN     NOT NULL,
     CONSTRAINT "user_pk" PRIMARY KEY ("id")

@@ -49,7 +49,7 @@ public class BlackListRecordDTO {
         if(record.getInn() != null)
             this.inn = record.getInn().getInn();
         if(record.getPhone() != null)
-            this.email = record.getPhone().getPhone();
+            this.phone = record.getPhone().getPhone();
         this.id = record.getId();
     }
 }

@@ -65,7 +65,7 @@ public class GetRecordsTest extends AbstractTest{
                 .andExpect(status().isOk())
                 .andReturn();
         assertThat(result.getResponse().getContentAsString()).isEqualTo(
-                "[{\"id\":10006,\"personalInfo\":{},\"passportInfo\":{},\"email\":\"+78953475143\"}]"
+                "[{\"id\":10006,\"personalInfo\":{},\"passportInfo\":{},\"phone\":\"+78953475143\",\"email\":\"ivan@yandex.ru\"}]"
         );
     }
 }
