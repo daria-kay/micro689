@@ -20,7 +20,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/api/v1/black-list")
-@CrossOrigin(value = "*", methods = {OPTIONS, GET, POST, PUT})
 public class BlackListResource {
 
     private final BlackListRecordService blackListRecordService;
@@ -30,6 +29,7 @@ public class BlackListResource {
     }
 
     @PostMapping("/upload-task")
+    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization"})
     public ResponseEntity uploadCsvFile(Authentication authentication,
                                         @RequestParam("csv") MultipartFile multipartFile) {
         blackListRecordService.storeRecords(authentication, multipartFile);
@@ -37,6 +37,7 @@ public class BlackListResource {
     }
 
     @PostMapping("/add-entry-task")
+    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity addEntry(Authentication authentication,
                                    @RequestBody Map<String, String> request){
         int recordId = blackListRecordService.storeRecord(authentication, request);
@@ -44,11 +45,13 @@ public class BlackListResource {
     }
 
     @PostMapping(value = "/find-matches-task", produces = "application/json;charset=UTF-8")
+    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization"})
     public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody FindMatchesRequest request){
         return ResponseEntity.ok(blackListRecordService.findMatches(request));
     }
 
     @PutMapping("/{black-list-type}/{record-id}")
+    @CrossOrigin(value = "*", methods = {OPTIONS, PUT}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity updateRecord(@PathVariable("black-list-type") String blType,
                                        @PathVariable("record-id") int recordId,
                                        @RequestBody Map<String, String> values){
@@ -57,12 +60,14 @@ public class BlackListResource {
     }
 
     @DeleteMapping("/{record-id}")
+    @CrossOrigin(value = "*", methods = {OPTIONS, DELETE}, allowedHeaders = {"Authorization"})
     public ResponseEntity deleteRecord(@ValidRecordId @PathVariable("record-id") Integer recordId) {
         blackListRecordService.deleteRecord(recordId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(produces = "application/json")
+    @CrossOrigin(value = "*", methods = {OPTIONS, GET}, allowedHeaders = {"Authorization"})
     public ResponseEntity<List<BlackListRecordDTO>> getRecords(
             Authentication authentication,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
