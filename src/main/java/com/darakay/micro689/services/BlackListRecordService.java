@@ -6,6 +6,7 @@ import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.BLTypeNotFoundException;
+import com.darakay.micro689.exception.CannotReadFileException;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.repo.MyBatisRecordRepository;
 import com.darakay.micro689.repo.RecordsRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,8 +56,14 @@ public class BlackListRecordService {
         for(String blockName : services.keySet()){
             recordValues.put(blockName, services.get(blockName).storeRecord(values));
         }
+        checkRecordsValues(recordValues);
         recordValues.put("creatorId", creatorId);
         return myBatisRecordRepository.insertMapAsRecord(recordValues);
+    }
+
+    private void checkRecordsValues(Map<String, Integer> recordValues) {
+        if(recordValues.values().stream().noneMatch(Objects::nonNull))
+            throw new CannotReadFileException("Отсутствуют заголовки");
     }
 
     public FindMatchesResult findMatches(FindMatchesRequest request){

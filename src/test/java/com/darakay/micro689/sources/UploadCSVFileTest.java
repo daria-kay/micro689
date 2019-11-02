@@ -125,6 +125,15 @@ public class UploadCSVFileTest extends AbstractTest {
     }
 
     @Test
+    public void shouldReturn_400Response_ForInvalidFileFormat_MissingHeaderRecord() throws Exception {
+        mockMvc.perform(
+                authenticateMultipartRequest(UPLOAD_URL, "test_user", "test_pw",
+                       getFakeInvalid(10))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void shouldReturn_400Response_ForInvalidFileFormat_WrongDataFormat() throws Exception {
         mockMvc.perform(
                 authenticateMultipartRequest(UPLOAD_URL, "test_user", "test_pw",
@@ -210,6 +219,25 @@ public class UploadCSVFileTest extends AbstractTest {
     private MockMultipartFile getFakeCsvContentForFullFilledBL(int recordCount) {
         StringBuilder sb = new StringBuilder();
         sb.append("surname;firstName;secondName;birthDate;passportSeria;passportNumber;inn;phone;email\n");
+        for (int i = 0; i < recordCount; i++) {
+            sb.append("Босяков;");
+            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
+            sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{7};"));
+            sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9];"));
+            sb.append(fakeValuesService.regexify("[0-9]{4};"));
+            sb.append(fakeValuesService.regexify("[0-9]{6};"));
+            sb.append(fakeValuesService.regexify("[0-9]{6};"));
+            sb.append(fakeValuesService.regexify("+7[0-9]{10};"));
+            sb.append(fakeValuesService.regexify("[A-Za-z]{6}\\@[a-z]{3}\\.com"));
+            sb.append("\n");
+        }
+        return new MockMultipartFile("csv", null,
+                "text/csv", sb.toString().getBytes());
+    }
+
+
+    private MockMultipartFile getFakeInvalid(int recordCount) {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < recordCount; i++) {
             sb.append("Босяков;");
             sb.append(fakeValuesService.regexify("[А-Я]{1}[а-я]{5};"));
