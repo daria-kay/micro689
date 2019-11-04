@@ -20,7 +20,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/api/v1/partner","/api/v1/logup", "/api/v1/black-list/find-matches-task")
+                .authorizeRequests().antMatchers("/api/v1/partner","/api/v1/logup")
                 .permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated()

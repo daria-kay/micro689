@@ -30,10 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
 @EnableAspectJAutoProxy
-public class FindMatchesTest {
+public class FindMatchesTest extends AbstractTest {
 
     private final static String URL = "/api/v1/black-list/find-matches-task";
 
@@ -62,7 +60,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                    post(URL)
+                    authenticatePostRequest(URL, "test_user", "test_pw")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -82,7 +80,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -106,7 +104,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -130,7 +128,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -154,7 +152,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -179,7 +177,7 @@ public class FindMatchesTest {
                 .build();
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -198,7 +196,7 @@ public class FindMatchesTest {
         request.put("example", example);
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -214,7 +212,7 @@ public class FindMatchesTest {
         testRequest.put("id", "12345678");
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testRequest)))
                 .andExpect(status().isOk())
@@ -232,7 +230,7 @@ public class FindMatchesTest {
         testRequest.put("example", example);
 
         mockMvc.perform(
-                post(URL)
+                authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testRequest)))
                 .andExpect(status().isOk())

@@ -45,7 +45,7 @@ public class BlackListResource {
     }
 
     @PostMapping(value = "/find-matches-task", produces = "application/json;charset=UTF-8")
-    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization"})
+    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody FindMatchesRequest request){
         return ResponseEntity.ok(blackListRecordService.findMatches(request));
     }
