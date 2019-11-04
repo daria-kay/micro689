@@ -32,6 +32,8 @@ spring:
     driver-class-name: org.postgresql.Driver
 mybatis:
   config-location: classpath:mybatis/config.xml
+logging:
+  file: /micro689/micro689.log
 ---
 spring:
   profiles: test
