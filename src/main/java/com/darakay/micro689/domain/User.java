@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.intellij.lang.annotations.RegExp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,7 +22,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Size(max = 20, min = 5, message = "Логин может содержать от 5 до 20 символов")
+    @Size(max = 20, min = 1, message = "Логин не может содержать больше 20 символов")
+    @Pattern(regexp = "[a-zA-Z0-9_]+", message = "Логин может содержать только латинские буквы, цифры и нижнее подчеркивание")
     private String login;
 
     @Column(name = "pw")

@@ -25,6 +25,7 @@ spring:
             non_contextual_creation: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+    contexts: prod
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
     username: ${USER}
