@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "inn_bl")
@@ -19,7 +19,7 @@ public class InnBLRecord implements BlackListRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Size(max = 10, min = 6, message = "Номер не ИНН может содержать больше 10 знаков")
+    @Pattern(regexp = "^[\\d]{10}([\\d]{2})?$", message = "Некорректная длина или формат ИНН")
     @Column(name = "inn_num")
     private String inn;
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -21,10 +22,12 @@ public class PassportInfoBLRecord implements BlackListRecord {
     private Integer id;
 
     @Size(max = 4, min = 4, message = "Серия пасспорта может содержать только 4 знака")
+    @Pattern(regexp = "[0-9]{4}", message = "Некорректный формат серии пасспорта")
     @Column(name = "pass_ser")
     private String passportSeria;
 
     @Size(max = 6, min = 6, message = "Номер пасспорта может содержать только 6 знаков")
+    @Pattern(regexp = "[0-9]{6}", message = "Некорректный формат номера пасспорта")
     @Column(name = "pass_num")
     private String passportNumber;
 }

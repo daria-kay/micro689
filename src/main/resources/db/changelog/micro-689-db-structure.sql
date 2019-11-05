@@ -44,7 +44,7 @@ CREATE TABLE "personal_info_bl"
 CREATE TABLE "inn_bl"
 (
     "id"         serial     NOT NULL,
-    "inn_num"    varchar(10) NOT NULL,
+    "inn_num"    varchar(12) NOT NULL,
     CONSTRAINT "inn_bl_pk" PRIMARY KEY ("id")
 ) WITH (
       OIDS= FALSE

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -21,5 +22,7 @@ public class PhoneBLRecord implements BlackListRecord {
     private Integer id;
 
     @Size(max = 12, message = "Максимум 12 знаков")
+    @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$",
+            message = "Некорректный формат телефона")
     private String phone;
 }

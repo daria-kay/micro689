@@ -88,7 +88,7 @@ public class UploadCSVFileTest extends AbstractTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        assertThat(innBLRepository.findByInn("123456")).hasSize(5);
+        assertThat(innBLRepository.findByInn("0000000001")).hasSize(5);
     }
 
     @Test
@@ -197,7 +197,7 @@ public class UploadCSVFileTest extends AbstractTest {
         StringBuilder sb = new StringBuilder();
         sb.append("inn\n");
         for (int i = 0; i < recordCount; i++) {
-            sb.append(fakeValuesService.regexify("123456"));
+            sb.append(fakeValuesService.regexify("0000000001"));
             sb.append("\n");
         }
         return new MockMultipartFile("csv", null,
@@ -226,9 +226,9 @@ public class UploadCSVFileTest extends AbstractTest {
             sb.append(fakeValuesService.regexify("19[0-9]{2}-[1-9]-[1-9];"));
             sb.append(fakeValuesService.regexify("[0-9]{4};"));
             sb.append(fakeValuesService.regexify("[0-9]{6};"));
-            sb.append(fakeValuesService.regexify("[0-9]{6};"));
+            sb.append(fakeValuesService.regexify("[0-9]{12};"));
             sb.append(fakeValuesService.regexify("+7[0-9]{10};"));
-            sb.append(fakeValuesService.regexify("[A-Za-z]{6}\\@[a-z]{3}\\.com"));
+            sb.append("user@host.ru");
             sb.append("\n");
         }
         return new MockMultipartFile("csv", null,

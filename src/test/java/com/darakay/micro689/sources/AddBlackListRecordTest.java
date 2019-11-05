@@ -97,9 +97,7 @@ public class AddBlackListRecordTest extends AbstractTest{
                 authenticatePostRequest(URL, "test_user", "test_pw")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message")
-                        .value("Серия пасспорта может содержать только 4 знака"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -107,7 +105,7 @@ public class AddBlackListRecordTest extends AbstractTest{
 
         Map<String, String> map = new HashMap<>();
         map.put("passportSeria", "1234");
-        map.put("passportNumber", "asdyuo");
+        map.put("passportNumber", "123456");
         map.put("name", "value");
 
         mockMvc.perform(
@@ -174,5 +172,120 @@ public class AddBlackListRecordTest extends AbstractTest{
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    public void return201_WhenInnHas10Digits() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "0000000000");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void return201_WhenInnHas12Digits() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "000000000000");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenInnHasLessThen10Digits() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "000000");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректная длина или формат ИНН"));
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenInnHasMoreThen12Digits() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "00000000000000000000000000000000000");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректная длина или формат ИНН"));
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenInnHas11Digits() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "00000000000");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректная длина или формат ИНН"));
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenInnHasLettersOrOtherSymbols() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("inn", "a.\\");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректная длина или формат ИНН"));
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenEmailHasInvalidFormat() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("email", "aaaaaaaaaaaaaaaaaaa");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректный формат email"));
+    }
+
+    @Test
+    public void return201_WhenPhoneIsValid() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("phone", "9827688717");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void return400WithErrorMessage_WhenPhoneIsInvalid() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("phone", "+7982.688\\17");
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(map)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Некорректный формат телефона"));
     }
 }
