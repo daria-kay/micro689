@@ -83,7 +83,7 @@
         </insert>
         <insert tableName="phone_bl">
             <column name="id" value="90"/>
-            <column name="phone" value="+78953475143"/>
+            <column name="phone" value="+78953475148"/>
         </insert>
         <insert tableName="phone_bl">
             <column name="id" value="91"/>
@@ -99,7 +99,7 @@
         </insert>
         <insert tableName="email_bl">
             <column name="id" value="1234"/>
-            <column name="email" value="ivan@yandex.ru"/>
+            <column name="email" value="searchTest@host.ru"/>
         </insert>
         <insert tableName="email_bl">
             <column name="id" value="12345"/>

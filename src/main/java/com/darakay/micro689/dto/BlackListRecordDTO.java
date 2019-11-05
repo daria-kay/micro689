@@ -1,7 +1,7 @@
 package com.darakay.micro689.dto;
 
 import com.darakay.micro689.domain.Record;
-import com.darakay.micro689.exception.InvalidRequestFormatException;
+import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -38,7 +38,7 @@ public class BlackListRecordDTO {
 
     @JsonAnySetter
     public void handleUnknown(String key, Object value){
-        throw InvalidRequestFormatException.invalidFormat();
+        throw InvalidFindMatchesRequestFormatException.invalidFormat();
     }
 
     public BlackListRecordDTO(Record record){

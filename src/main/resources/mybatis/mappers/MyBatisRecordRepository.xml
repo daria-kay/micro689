@@ -63,4 +63,42 @@
         INSERT INTO record (creator_id, personal_id, passport_id, inn_id, phone_id, email_id) VALUES
         (#{creatorId}, #{personal-info}, #{passport-info}, #{inn}, #{phone}, #{email});
     </insert>
+
+    <select id="findRecords" resultType="int" parameterType="map">
+        SELECT record.id FROM record
+        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
+        JOIN passport_info_bl pib ON record.passport_id = pib.id
+        JOIN inn_bl ib on record.inn_id = ib.id
+        JOIN phone_bl pb on record.phone_id = pb.id
+        JOIN email_bl eb on record.email_id = eb.id
+        WHERE creator_id = #{userId}
+
+        <if test="request.surname != null">
+            AND surname = #{request.surname}
+        </if>
+        <if test="request.firstName != null">
+            AND first_name = #{request.firstName}
+        </if>
+        <if test="request.secondName != null">
+            AND second_name = #{request.secondName}
+        </if>
+        <if test="request.birthDate != null">
+            AND birth_date = #{request.birthDate}
+        </if>
+        <if test="request.passportSeria != null">
+            AND pass_ser = #{request.passportSeria}
+        </if>
+        <if test="request.passportNumber != null">
+            AND pass_num = #{request.passportNumber}
+        </if>
+        <if test="request.inn != null">
+            AND inn_num = #{request.inn}
+        </if>
+        <if test="request.phone != null">
+            AND phone = #{request.phone}
+        </if>
+        <if test="request.email != null">
+            AND email = #{request.email}
+        </if>
+    </select>
 </mapper>

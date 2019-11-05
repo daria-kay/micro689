@@ -11,5 +11,4 @@ import java.util.List;
 @Repository
 public interface RecordsRepository extends PagingAndSortingRepository<Record, Integer> {
     List<Record> findByCreator(User user, Pageable pageable);
-
 }

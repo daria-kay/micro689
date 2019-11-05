@@ -4,7 +4,7 @@ import com.darakay.micro689.dto.ErrorMessageDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
 import com.darakay.micro689.exception.InvalidLogUpRequestException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
-import com.darakay.micro689.exception.InvalidRequestFormatException;
+import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,8 +36,8 @@ public class BlackListControllerAdvice {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(InvalidRequestFormatException.class)
-    public ResponseEntity handleInvalidRequestFormatException(InvalidRequestFormatException ex){
+    @ExceptionHandler(InvalidFindMatchesRequestFormatException.class)
+    public ResponseEntity handleInvalidRequestFormatException(InvalidFindMatchesRequestFormatException ex){
         return ResponseEntity.ok(FindMatchesResult.error(ex.getMessage()));
     }
 

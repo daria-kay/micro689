@@ -27,7 +27,7 @@ public class ValidationAspect {
 
     }
 
-    @Pointcut("execution(* com.darakay.micro689.sources.BlackListResource.findRecords(com.darakay.micro689.dto.FindMatchesRequest))")
+    @Pointcut("execution(* com.darakay.micro689.sources.BlackListResource.findMatches(com.darakay.micro689.dto.FindMatchesRequest))")
     public void validatedFindMatchesRequest(){
 
     }

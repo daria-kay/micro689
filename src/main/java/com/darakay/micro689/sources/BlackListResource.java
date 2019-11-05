@@ -4,6 +4,7 @@ import com.darakay.micro689.annotation.ValidRecordId;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
+import com.darakay.micro689.dto.FindRecordsRequest;
 import com.darakay.micro689.services.BlackListRecordService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +47,15 @@ public class BlackListResource {
 
     @PostMapping(value = "/find-matches-task", produces = "application/json;charset=UTF-8")
     @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization", "Content-Type"})
-    public ResponseEntity<FindMatchesResult> findRecords(@Validated @RequestBody FindMatchesRequest request){
+    public ResponseEntity<FindMatchesResult> findMatches(@Validated @RequestBody FindMatchesRequest request){
         return ResponseEntity.ok(blackListRecordService.findMatches(request));
+    }
+
+    @PostMapping(value = "/find-records-task", produces = "application/json;charset=UTF-8")
+    @CrossOrigin(value = "*", methods = {OPTIONS, POST}, allowedHeaders = {"Authorization", "Content-Type"})
+    public ResponseEntity<List<BlackListRecordDTO>> findRecords(@Validated @RequestBody FindRecordsRequest request,
+                                                                Authentication authentication){
+        return ResponseEntity.ok(blackListRecordService.findRecords(request, authentication));
     }
 
     @PutMapping("/{black-list-type}/{record-id}")
