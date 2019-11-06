@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.darakay</groupId>
 	<artifactId>micro689</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.4</version>
 	<packaging>jar</packaging>
 	<name>micro689</name>
 	<description>Service 'BlackLists' for microloans</description>

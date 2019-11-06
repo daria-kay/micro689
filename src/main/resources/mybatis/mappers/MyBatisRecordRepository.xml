@@ -6,11 +6,11 @@
         JOIN (
         SELECT "user".id as creator, partner.id as partner FROM "user" JOIN partner ON "user".partner_id = partner.id)
         AS cp ON record.creator_id = cp.creator
-        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
-        JOIN passport_info_bl pib ON record.passport_id = pib.id
-        JOIN inn_bl ib on record.inn_id = ib.id
-        JOIN phone_bl pb on record.phone_id = pb.id
-        JOIN email_bl eb on record.email_id = eb.id
+        left outer join personal_info_bl ON record.personal_id = personal_info_bl.id
+        left outer join passport_info_bl pib ON record.passport_id = pib.id
+        left outer join inn_bl ib on record.inn_id = ib.id
+        left outer join phone_bl pb on record.phone_id = pb.id
+        left outer join email_bl eb on record.email_id = eb.id
         WHERE partner = #{partnerId} AND ( 1=0
         <if test="example.personalInfo != null">
             OR surname = #{example.personalInfo.surname} AND first_name = #{example.personalInfo.firstName} AND
@@ -32,13 +32,13 @@
      )
     </select>
 
-    <select id="findMatches" resultType="boolean" parameterType="com.darakay.micro689.dto.BlackListRecordDTO">
+    <select id="findMatches" resultType="boolean" parameterType="com.darakay.micro689.dto.ExampleDTO">
         SELECT EXISTS (SELECT * FROM record
-        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
-        JOIN passport_info_bl pib ON record.passport_id = pib.id
-        JOIN inn_bl ib on record.inn_id = ib.id
-        JOIN phone_bl pb on record.phone_id = pb.id
-        JOIN email_bl eb on record.email_id = eb.id
+        left outer join personal_info_bl ON record.personal_id = personal_info_bl.id
+        left outer join passport_info_bl pib ON record.passport_id = pib.id
+        left outer join inn_bl ib on record.inn_id = ib.id
+        left outer join phone_bl pb on record.phone_id = pb.id
+        left outer join email_bl eb on record.email_id = eb.id
         WHERE 1=0
         <if test="personalInfo != null">
             OR surname = #{personalInfo.surname} AND first_name = #{personalInfo.firstName}
@@ -66,11 +66,11 @@
 
     <select id="findRecords" resultType="int" parameterType="map">
         SELECT record.id FROM record
-        JOIN personal_info_bl ON record.personal_id = personal_info_bl.id
-        JOIN passport_info_bl pib ON record.passport_id = pib.id
-        JOIN inn_bl ib on record.inn_id = ib.id
-        JOIN phone_bl pb on record.phone_id = pb.id
-        JOIN email_bl eb on record.email_id = eb.id
+        left outer join personal_info_bl ON record.personal_id = personal_info_bl.id
+        left outer join passport_info_bl pib ON record.passport_id = pib.id
+        left outer join inn_bl ib on record.inn_id = ib.id
+        left outer join phone_bl pb on record.phone_id = pb.id
+        left outer join email_bl eb on record.email_id = eb.id
         WHERE creator_id = #{userId}
 
         <if test="request.surname != null">

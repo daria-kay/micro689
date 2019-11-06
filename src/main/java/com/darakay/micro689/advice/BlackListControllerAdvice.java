@@ -48,6 +48,6 @@ public class BlackListControllerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException ex){
-        return ResponseEntity.ok(FindMatchesResult.error("Некорректный формат запроса"));
+        return ResponseEntity.ok(FindMatchesResult.error(ex.getCause().getCause().getMessage()));
     }
 }

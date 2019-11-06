@@ -64,7 +64,7 @@ public class AddBlackListRecordTest extends AbstractTest{
                 .content(objectMapper.writeValueAsString(map)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message")
-                        .value("Не заполнено обязательное поле 'firstName'"));
+                        .value("Не заполнено обязательное поле 'Имя'"));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class AddBlackListRecordTest extends AbstractTest{
     }
 
     @Test
-    public void return400Response_WhenRequestIsInvalid_TooLong() throws Exception {
+    public void return400Response_WhenRequestIsInvalid_TooLongPassportSeria() throws Exception {
 
         Map<String, String> map = new HashMap<>();
         map.put("passportSeria", "123456");

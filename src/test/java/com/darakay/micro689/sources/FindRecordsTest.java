@@ -45,7 +45,7 @@ public class FindRecordsTest extends AbstractTest{
         List<BlackListRecordDTO> actual = mapper.readValue(result.getResponse().getContentAsString(),
                 new TypeReference<List<BlackListRecordDTO>>(){});
 
-        assertThat(actual).hasSize(2);
+        assertThat(actual).hasSize(3);
     }
 
     @Test

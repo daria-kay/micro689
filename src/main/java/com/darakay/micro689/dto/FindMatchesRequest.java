@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindMatchesRequest {
     private Integer partnerId;
-    private BlackListRecordDTO example;
+    private ExampleDTO example;
 }

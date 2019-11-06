@@ -6,6 +6,11 @@ import com.darakay.micro689.dto.PersonalInfoDTO;
 import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
 import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class FindMatchesRequestValidator {
 

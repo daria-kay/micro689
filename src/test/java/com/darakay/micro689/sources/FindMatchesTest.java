@@ -1,9 +1,6 @@
 package com.darakay.micro689.sources;
 
-import com.darakay.micro689.dto.BlackListRecordDTO;
-import com.darakay.micro689.dto.FindMatchesRequest;
-import com.darakay.micro689.dto.PassportInfoDTO;
-import com.darakay.micro689.dto.PersonalInfoDTO;
+import com.darakay.micro689.dto.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +46,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_SearchesPartiallyRecordsWithPartnerId_WhenMatchesExist() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))
                 .build();
@@ -70,7 +67,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_SearchesAllPartiallyRecordsWithoutPartnerId_WhenMatchesExist() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo((new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01"))))
                 .build();
@@ -90,7 +87,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnAllBlocks_WithoutPartnerId() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))
                 .passportInfo(new PassportInfoDTO("6538", "275396"))
@@ -114,7 +111,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnSeveralBlocks_WithoutPartnerId() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-02-01")))
                 .passportInfo(new PassportInfoDTO("6538", "275396"))
@@ -138,7 +135,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereAreNotMatchesOnAllBlocks_WithoutPatrnerId() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Петров", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-02-01")))
                 .passportInfo(new PassportInfoDTO("1274", "783486"))
@@ -162,7 +159,7 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_ReturnCorrectResult_WhenThereIsMatchOnAllBlocks_WithPartnerId() throws Exception {
-        BlackListRecordDTO example = BlackListRecordDTO.builder()
+        ExampleDTO example = ExampleDTO.builder()
                 .personalInfo(new PersonalInfoDTO("Иванов", "Иван",
                         "Иванович", java.sql.Date.valueOf("1970-01-01")))
                 .passportInfo(new PassportInfoDTO("6754", "985634"))
@@ -183,6 +180,28 @@ public class FindMatchesTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("2"))
                 .andExpect(jsonPath("$.responseDate").value(currentDate));
+    }
+
+    @Test
+    public void findRecord_ReturnNegativeResult_WhenDateIsInvalid() throws Exception {
+        Map<String, Map<String, String>> example = new HashMap<>();
+        Map<String, String> passportInfo = new HashMap<>();
+        passportInfo.put("surname", "Иванов");
+        passportInfo.put("firstName", "Иванов");
+        passportInfo.put("secondName", "Иванов");
+        passportInfo.put("birthDate", "1999-13-01");
+        example.put("personalInfo", passportInfo);
+
+        Map<String, Map<String, Map<String, String>>> request = new HashMap<>();
+        request.put("example", example);
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("0"))
+                .andExpect(jsonPath("$.message").value("Некорректная дата"));
     }
 
     @Test
@@ -207,14 +226,16 @@ public class FindMatchesTest extends AbstractTest {
 
     @Test
     public void findRecord_IgnoreIdField() throws Exception {
-        Map<String, String> testRequest = new HashMap<>();
-        testRequest.put("email", "asdf@tyui");
-        testRequest.put("id", "12345678");
+        Map<String, String> example = new HashMap<>();
+        example.put("id", "1234");
+
+        Map<String, Map<String, String>> request = new HashMap<>();
+        request.put("example", example);
 
         mockMvc.perform(
                 authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(mapper.writeValueAsString(testRequest)))
+                        .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("0"))
                 .andExpect(jsonPath("$.message").value("Некорректный формат запроса"));

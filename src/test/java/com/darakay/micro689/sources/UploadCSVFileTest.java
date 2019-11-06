@@ -121,7 +121,7 @@ public class UploadCSVFileTest extends AbstractTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
-                        .value("Не заполнено обязательное поле 'secondName'"));
+                        .value("Не заполнено обязательное поле 'Отчество'"));
     }
 
     @Test

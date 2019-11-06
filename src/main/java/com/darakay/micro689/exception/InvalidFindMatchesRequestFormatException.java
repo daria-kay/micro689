@@ -12,4 +12,8 @@ public class InvalidFindMatchesRequestFormatException extends RuntimeException {
     public static InvalidFindMatchesRequestFormatException invalidFormat() {
         return new InvalidFindMatchesRequestFormatException("Некорректный формат запроса");
     }
+
+    public static InvalidFindMatchesRequestFormatException invalidDate() {
+        return new InvalidFindMatchesRequestFormatException("Некорректная дата");
+    }
 }
