@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +19,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .cors().and()
+                .authorizeRequests().antMatchers("/", "/csrf").permitAll()
+                .and()
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .and()
                 .authorizeRequests().antMatchers("/api/v1/partner","/api/v1/logup")
@@ -28,5 +31,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers("/v2/api-docs", "/configuration/ui",
+                "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**", "/", "/csrf");
     }
 }

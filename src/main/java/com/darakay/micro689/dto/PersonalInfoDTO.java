@@ -3,6 +3,7 @@ package com.darakay.micro689.dto;
 import com.darakay.micro689.domain.PersonalInfoBLRecord;
 import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,15 +22,19 @@ public class PersonalInfoDTO {
     @JsonIgnore
     private DateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
+    @ApiModelProperty(value = "Фамилия", required = true)
     @JsonProperty("surname")
     private String surname;
 
+    @ApiModelProperty(value = "Имя", required = true)
     @JsonProperty("firstName")
     private String firstName;
 
+    @ApiModelProperty(value = "Отчество", required = true)
     @JsonProperty("secondName")
     private String secondName;
 
+    @ApiModelProperty(value = "Дата рождения", required = true)
     private Date birthDate;
 
     @JsonSetter("birthDate")

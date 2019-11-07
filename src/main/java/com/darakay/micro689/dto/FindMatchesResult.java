@@ -3,6 +3,7 @@ package com.darakay.micro689.dto;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,12 +12,15 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FindMatchesResult {
 
+    @ApiModelProperty("Статус результата. 0 - произошла ошибка, 1 - записи найдены, 2 - записи не найдены")
     @JsonProperty("status")
     private int status;
 
+    @ApiModelProperty("Дата выполнения запроса")
     @JsonProperty("responseDate")
     private String responseDate;
 
+    @ApiModelProperty("Сообщение об ошибке")
     @JsonProperty("message")
     private String message;
 
