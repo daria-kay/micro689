@@ -39,9 +39,7 @@ public class FindMatchesResult {
     }
 
     private static int getStatus(boolean matches){
-        if(matches)
-            return 1;
-        return 2;
+        return matches ? 1 : 2;
     }
 
     public static FindMatchesResult error(String message) {

@@ -1,4 +1,4 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
 import com.darakay.micro689.dto.LogupRequest;
 import com.darakay.micro689.repo.UserRepository;
@@ -79,8 +79,7 @@ public class LogupControllerTest {
                 .content(mapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message")
-                        .value("Логин может содержать только латинские буквы (заглавные и прописные) и" +
-                                " цифры. Максимальный размер логина 100 символов"));
+                        .value("Логин может содержать только латинские буквы, цифры и нижнее подчеркивание"));
     }
 
     @Test

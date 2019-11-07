@@ -1,15 +1,16 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
-import com.darakay.micro689.dto.*;
+import com.darakay.micro689.dto.ExampleDTO;
+import com.darakay.micro689.dto.FindMatchesRequest;
+import com.darakay.micro689.dto.PassportInfoDTO;
+import com.darakay.micro689.dto.PersonalInfoDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -183,7 +183,7 @@ public class FindMatchesTest extends AbstractTest {
     }
 
     @Test
-    public void findRecord_ReturnNegativeResult_WhenDateIsInvalid() throws Exception {
+    public void findRecord_ReturnNegativeResult_WhenMonthIsInvalid() throws Exception {
         Map<String, Map<String, String>> example = new HashMap<>();
         Map<String, String> passportInfo = new HashMap<>();
         passportInfo.put("surname", "Иванов");
@@ -199,6 +199,73 @@ public class FindMatchesTest extends AbstractTest {
                 authenticatePostRequest(URL, "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("0"))
+                .andExpect(jsonPath("$.message").value("Некорректная дата"));
+    }
+
+    @Test
+    public void findRecord_ReturnNegativeResult_WhenPersonalInfoContainsUnknownFields() throws Exception {
+        Map<String, Map<String, String>> example = new HashMap<>();
+        Map<String, String> passportInfo = new HashMap<>();
+        passportInfo.put("surname", "Иванов");
+        passportInfo.put("firstName", "Иванов");
+        passportInfo.put("secondName", "Иванов");
+        passportInfo.put("birthDate", "1999-01-01");
+        passportInfo.put("field", "yyyy");
+        example.put("personalInfo", passportInfo);
+
+        Map<String, Map<String, Map<String, String>>> request = new HashMap<>();
+        request.put("example", example);
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("0"))
+                .andExpect(jsonPath("$.message").value("Некорректный формат запроса"));
+    }
+
+    @Test
+    public void findRecord_ReturnNegativeResult_WhenPersonalInfoDoesNotContainRequiredFields() throws Exception {
+        Map<String, Map<String, String>> example = new HashMap<>();
+        Map<String, String> passportInfo = new HashMap<>();
+        passportInfo.put("surname", "Иванов");
+        passportInfo.put("firstName", "Иванов");
+        passportInfo.put("birthDate", "1999-01-01");
+        example.put("personalInfo", passportInfo);
+
+        Map<String, Map<String, Map<String, String>>> request = new HashMap<>();
+        request.put("example", example);
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("0"))
+                .andExpect(jsonPath("$.message").value("Некорректный формат запроса"));
+    }
+
+    @Test
+    public void findRecord_ReturnNegativeResult_WhenDayIsInvalid() throws Exception {
+        Map<String, Map<String, String>> example = new HashMap<>();
+        Map<String, String> passportInfo = new HashMap<>();
+        passportInfo.put("surname", "Иванов");
+        passportInfo.put("firstName", "Иванов");
+        passportInfo.put("secondName", "Иванов");
+        passportInfo.put("birthDate", "1999-12-32");
+        example.put("personalInfo", passportInfo);
+
+        Map<String, Map<String, Map<String, String>>> request = new HashMap<>();
+        request.put("example", example);
+
+        String content = mapper.writeValueAsString(request);
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("0"))
                 .andExpect(jsonPath("$.message").value("Некорректная дата"));
@@ -222,6 +289,28 @@ public class FindMatchesTest extends AbstractTest {
                 .andExpect(jsonPath("$.status").value("0"))
                 .andExpect(jsonPath("$.message")
                         .value("Не заполнено обязательное поле в 'passportInfo'"));
+    }
+
+    @Test
+    public void findRecord_ReturnNegativeResult_WhenPassportInfoContainsUnknownFields() throws Exception {
+        Map<String, Map<String, String>> example = new HashMap<>();
+        Map<String, String> passportInfo = new HashMap<>();
+        passportInfo.put("passportSeria", "1234");
+        passportInfo.put("passportNumber", "123456");
+        passportInfo.put("unknown", "1234");
+        example.put("passportInfo", passportInfo);
+
+        Map<String, Map<String, Map<String, String>>> request = new HashMap<>();
+        request.put("example", example);
+
+        mockMvc.perform(
+                authenticatePostRequest(URL, "test_user", "test_pw")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("0"))
+                .andExpect(jsonPath("$.message")
+                        .value("Некорректный формат запроса"));
     }
 
     @Test

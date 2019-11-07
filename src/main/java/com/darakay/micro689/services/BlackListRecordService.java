@@ -1,6 +1,5 @@
 package com.darakay.micro689.services;
 
-import com.darakay.micro689.domain.BlackListRecord;
 import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.domain.User;
 import com.darakay.micro689.dto.BlackListRecordDTO;
@@ -12,7 +11,6 @@ import com.darakay.micro689.exception.CannotReadFileException;
 import com.darakay.micro689.exception.RecordNotFoundException;
 import com.darakay.micro689.repo.MyBatisRecordRepository;
 import com.darakay.micro689.repo.RecordsRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class BlackListRecordService {
@@ -113,11 +110,6 @@ public class BlackListRecordService {
                 return record.getEmail().getId();
         }
         throw new BLTypeNotFoundException(blockType);
-    }
-
-    public boolean recordsBelongToUser(int userId, int recordId) {
-        Record record = recordsRepository.findById(recordId).orElseThrow(RecordNotFoundException::new);
-        return record.getCreator().getId() == userId;
     }
 
     public List<BlackListRecordDTO> findRecords(FindRecordsRequest request, Authentication auth) {

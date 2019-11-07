@@ -23,8 +23,6 @@ public class LogUpRequestValidator {
             throw InvalidLogUpRequestException.emptyRequiredField();
         if(userRepository.existsByLogin(login))
             throw InvalidLogUpRequestException.nonUniqueUserName(login);
-        if(!login.matches("^[a-zA-Z0-9]{5,100}$"))
-            throw InvalidLogUpRequestException.invalidUserName();
         if(!partnerRepository.existsById(request.getPartnerId()))
             throw InvalidLogUpRequestException.partnerIdNotExists(request.getPartnerId());
     }

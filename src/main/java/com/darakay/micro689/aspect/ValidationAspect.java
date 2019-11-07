@@ -22,12 +22,12 @@ public class ValidationAspect {
         this.findMatchesRequestValidator = findMatchesRequestValidator;
     }
 
-    @Pointcut("execution(* com.darakay.micro689.sources.AuthenticationSource.logUp(com.darakay.micro689.dto.LogupRequest))")
+    @Pointcut("execution(* com.darakay.micro689.resources.AuthenticationResource.logUp(com.darakay.micro689.dto.LogupRequest))")
     public void validatedLogUpRequest(){
 
     }
 
-    @Pointcut("execution(* com.darakay.micro689.sources.BlackListResource.findMatches(com.darakay.micro689.dto.FindMatchesRequest))")
+    @Pointcut("execution(* com.darakay.micro689.resources.BlackListResource.findMatches(com.darakay.micro689.dto.FindMatchesRequest))")
     public void validatedFindMatchesRequest(){
 
     }

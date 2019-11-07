@@ -1,6 +1,5 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
-import com.darakay.micro689.annotation.ValidRecordId;
 import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.FindMatchesRequest;
 import com.darakay.micro689.dto.FindMatchesResult;
@@ -114,7 +113,7 @@ public class BlackListResource {
     })
     @DeleteMapping("/{record-id}")
     @CrossOrigin(value = "*", methods = {OPTIONS, DELETE}, allowedHeaders = {"Authorization"})
-    public ResponseEntity deleteRecord(@ValidRecordId @PathVariable("record-id") Integer recordId) {
+    public ResponseEntity deleteRecord(@PathVariable("record-id") Integer recordId) {
         blackListRecordService.deleteRecord(recordId);
         return ResponseEntity.noContent().build();
     }

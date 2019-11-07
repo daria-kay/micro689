@@ -1,6 +1,5 @@
 package com.darakay.micro689.repo;
 
-import com.darakay.micro689.dto.BlackListRecordDTO;
 import com.darakay.micro689.dto.ExampleDTO;
 import com.darakay.micro689.dto.FindRecordsRequest;
 import org.apache.ibatis.annotations.Mapper;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.intellij.lang.annotations.RegExp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;

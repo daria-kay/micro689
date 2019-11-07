@@ -2,9 +2,11 @@ package com.darakay.micro689.advice;
 
 import com.darakay.micro689.dto.ErrorMessageDTO;
 import com.darakay.micro689.dto.FindMatchesResult;
+import com.darakay.micro689.exception.CannotReadFileException;
+import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
 import com.darakay.micro689.exception.InvalidLogUpRequestException;
 import com.darakay.micro689.exception.InvalidRecordFormatException;
-import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +18,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class BlackListControllerAdvice {
+public class BlackListResourceExceptionHandler {
 
     @ExceptionHandler(InvalidRecordFormatException.class)
     public ResponseEntity<ErrorMessageDTO> handleInvalidFileFormatException(InvalidRecordFormatException ex) {
@@ -31,11 +33,6 @@ public class BlackListControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorMessageDTO(message));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity handleMethodArgumentTypeMismatchException(){
-        return ResponseEntity.notFound().build();
-    }
-
     @ExceptionHandler(InvalidFindMatchesRequestFormatException.class)
     public ResponseEntity handleInvalidRequestFormatException(InvalidFindMatchesRequestFormatException ex){
         return ResponseEntity.ok(FindMatchesResult.error(ex.getMessage()));
@@ -46,8 +43,13 @@ public class BlackListControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorMessageDTO(ex.getMessage()));
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException ex){
-        return ResponseEntity.ok(FindMatchesResult.error(ex.getCause().getCause().getMessage()));
+    @ExceptionHandler(JsonMappingException.class)
+    public ResponseEntity handleInvalidFindMatchesRequestJsonException(JsonMappingException ex){
+        return ResponseEntity.ok(FindMatchesResult.error(ex.getCause().getMessage()));
+    }
+
+    @ExceptionHandler(CannotReadFileException.class)
+    public ResponseEntity handleCannotReadFileException(CannotReadFileException ex){
+        return ResponseEntity.badRequest().body(new ErrorMessageDTO(ex.getMessage()));
     }
 }

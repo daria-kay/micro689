@@ -43,11 +43,6 @@ public class BlackListRecordDTO {
     @JsonProperty("email")
     private String email;
 
-    @JsonAnySetter
-    public void handleUnknown(String key, Object value){
-        throw InvalidFindMatchesRequestFormatException.invalidFormat();
-    }
-
     public BlackListRecordDTO(Record record){
         this.personalInfo = new PersonalInfoDTO(record.getPersonalInfo());
         this.passportInfo = new PassportInfoDTO(record.getPassportInfo());

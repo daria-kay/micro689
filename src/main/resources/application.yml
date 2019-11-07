@@ -7,24 +7,6 @@ spring:
             non_contextual_creation: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-  datasource:
-    url: jdbc:postgresql://localhost:5432/micro689_db
-    username: micro689_usr
-    password: pass
-    driver-class-name: org.postgresql.Driver
-mybatis:
-  config-location: classpath:mybatis/config.xml
----
-spring:
-  profiles: prod
-  jpa:
-    properties:
-      hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
     contexts: prod
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
@@ -38,20 +20,11 @@ logging:
 ---
 spring:
   profiles: test
-  jpa:
-    properties:
-      hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
     contexts: test
   datasource:
     url: jdbc:tc:postgresql:///databasename
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: postgres
     password:
-mybatis:
-  config-location: classpath:mybatis/config.xml
 

@@ -1,4 +1,4 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
 import com.darakay.micro689.domain.Record;
 import com.darakay.micro689.repo.PassportInfoBLRepository;
@@ -137,14 +137,14 @@ public class UpdateBlackListRecordTest extends AbstractTest{
     }
 
     @Test
-    public void shouldReturn404ResponseCode_NonexistentStringRecordId() throws Exception {
+    public void shouldReturn400ResponseCode_NonexistentStringRecordId() throws Exception {
         HashMap<String, String> testMap = new HashMap<>();
 
         mockMvc.perform(
                 authenticatePutRequest(URL+"passport-info/vg45", "test_user", "test_pw")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(testMap)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

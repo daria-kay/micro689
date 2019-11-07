@@ -1,4 +1,4 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.mock.web.MockMultipartFile;

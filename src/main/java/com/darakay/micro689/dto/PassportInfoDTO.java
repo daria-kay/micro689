@@ -1,6 +1,8 @@
 package com.darakay.micro689.dto;
 
 import com.darakay.micro689.domain.PassportInfoBLRecord;
+import com.darakay.micro689.exception.InvalidFindMatchesRequestFormatException;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,5 +32,10 @@ public class PassportInfoDTO {
             this.passportSeria = record.getPassportSeria();
             this.passportNumber = record.getPassportNumber();
         }
+    }
+
+    @JsonAnySetter
+    public void handleUnknown(String key, Object value){
+        throw InvalidFindMatchesRequestFormatException.invalidFormat();
     }
 }

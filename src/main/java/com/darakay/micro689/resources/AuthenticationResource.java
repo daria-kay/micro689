@@ -1,4 +1,4 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
 import com.darakay.micro689.dto.LogupRequest;
 import com.darakay.micro689.services.UserService;
@@ -11,11 +11,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/api/v1/")
 @Api("Аутентификация")
-public class AuthenticationSource {
+public class AuthenticationResource {
 
     private final UserService userService;
 
-    public AuthenticationSource(UserService userService) {
+    public AuthenticationResource(UserService userService) {
         this.userService = userService;
     }
 

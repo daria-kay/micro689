@@ -31,7 +31,7 @@ public class CSVFileReader {
         try (Reader reader = new InputStreamReader(new ByteArrayInputStream(file.getBytes()))) {
             return CSV_FORMAT.parse(reader).getRecords();
         } catch (IllegalStateException | IOException e) {
-            throw new CannotReadFileException("");
+            throw new CannotReadFileException("Невозможно распарсить файл");
         }
     }
  }

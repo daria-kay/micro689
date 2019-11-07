@@ -1,4 +1,4 @@
-package com.darakay.micro689.sources;
+package com.darakay.micro689.resources;
 
 import com.darakay.micro689.dto.PartnerDTO;
 import com.darakay.micro689.services.PartnerService;
